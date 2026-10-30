@@ -1,0 +1,140 @@
+.process[role="list"] {
+  --dot: #9a9893;
+  --track: rgba(11, 11, 12, 0.3);
+  --num: rgba(11, 11, 12, 0.9);
+  --txt: var(--muted);
+  position: relative;
+  display: grid;
+  gap: 40px;
+  margin: 0;
+  padding: 0 0 0 36px;
+}
+
+.process[role="list"].red {
+  --dot: rgba(255, 255, 255, 0.55);
+  --track: rgba(255, 255, 255, 0.45);
+  --num: var(--white);
+  --txt: rgba(255, 255, 255, 0.85);
+}
+
+.red .progress {
+  background: var(--ink);
+}
+
+.process[role="list"].dark {
+  --dot: #555;
+  --track: rgba(255, 255, 255, 0.25);
+  --num: rgba(255, 255, 255, 0.92);
+  --txt: var(--on-dark);
+}
+
+.track {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 1.5px;
+  background: var(--track);
+}
+
+.progress {
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  transform-origin: top;
+}
+
+.step {
+  position: relative;
+}
+
+.dot {
+  position: absolute;
+  top: 10px;
+  left: -36px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--dot);
+}
+
+.num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-num);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--num);
+}
+
+.title {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.875rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.text {
+  max-width: 390px;
+  margin-top: 12px;
+  color: var(--txt);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+.trackDot {
+  display: none;
+}
+
+.numWrap {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.04em;
+}
+
+@media (min-width: 900px) {
+  .process[role="list"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    padding: clamp(80px, 6vw, 110px) 0 0;
+    min-height: 0;
+  }
+
+  .track {
+    top: 7px;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 1.5px;
+  }
+
+  .progress {
+    transform-origin: left;
+  }
+
+  /* On desktop the dots live on the line itself, one at the start of each column */
+  .dot {
+    display: none;
+  }
+
+  .trackDot {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: calc(var(--i) * (100% + 24px) / 4);
+    width: 15px;
+    height: 15px;
+    margin-top: -7.5px;
+    border-radius: 50%;
+    background: var(--dot);
+  }
+
+  /* All four steps finish level along the top. */
+  .step {
+    will-change: transform, opacity;
+  }
+}

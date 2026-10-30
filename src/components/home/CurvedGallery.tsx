@@ -1,0 +1,67 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
+import { gsap, useGSAP, prefersReducedMotion } from "@/components/motion/gsap";
+import styles from "./CurvedGallery.module.css";
+
+const SLIDES: { src: string; alt: string; href?: string }[] = [
+  { src: "/images/sashtech/websiteockup/web5.webp", alt: "Website design", href: "/work" },
+  { src: "/images/sashtech/branding/branding1.webp", alt: "Brand identity artwork", href: "/work" },
+  { src: "/images/sashtech/websiteockup/web6.webp", alt: "Responsive website design", href: "/work" },
+  { src: "/images/sashtech/branding/branding3.webp", alt: "Creative branding project", href: "/work" },
+];
+
+/**
+ * The curved "panorama" strip from the design (four bowed panels). The bend is done with
+ * a 3D cylinder: panels rotate around a shared centre and the ring turns as you scroll.
+ */
+export function CurvedGallery() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return;
+      gsap.fromTo(
+        "[data-ring]",
+        { rotateY: 14 },
+        { rotateY: -14, ease: "none", scrollTrigger: { trigger: ref.current, start: "top bottom", end: "bottom top", scrub: 0.6 } },
+      );
+      gsap.from("[data-panel]", {
+        opacity: 0,
+        z: -300,
+        stagger: 0.08,
+        duration: 1.4,
+        scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
+      });
+    },
+    { scope: ref },
+  );
+
+  // Six panels: the four visible in the design plus one either side that rotates in on scroll.
+  const slides = [SLIDES[3], ...SLIDES, SLIDES[0]];
+  return (
+    <div ref={ref} className={styles.stage}>
+      <div className={styles.ring} data-ring>
+        {slides.map((s, i) => (
+          <figure
+            key={i}
+            className={styles.panel}
+            data-panel
+            style={{ "--i": i - (slides.length - 1) / 2 } as React.CSSProperties}
+            aria-hidden={i === 0 || i === slides.length - 1 || undefined}
+          >
+            <Image src={s.src} alt={i === 0 || i === slides.length - 1 ? "" : s.alt} fill sizes="(min-width: 1024px) 24vw, 60vw" className={styles.img} />
+            {/* Project panels open their case study (edge duplicates stay decorative) */}
+            {s.href && i > 0 && i < slides.length - 1 && (
+              <Link href={s.href} className={styles.link} data-cursor="View">
+                <span className="sr-only">View work: {s.alt}</span>
+              </Link>
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
