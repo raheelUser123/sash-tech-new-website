@@ -188,3 +188,5 @@
     align-self: start;
   }
 }
+
+.icon > div { width:min(100%,270px); height:100%; aspect-ratio:1; }

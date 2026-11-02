@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { JsonLd } from "@/components/JsonLd";
@@ -154,7 +155,7 @@ async function InsightArticle({ params }: { params: PageProps<"/insights/[slug]"
         }
         text="Tell us about your store, your current challenges and what you want to achieve. We'll discuss the requirements and prepare a clear project scope."
         primary={{ label: "Discuss Your Shopify Project", href: "/contact" }}
-        visual={<Image src="/images/insights/cube-3d.png" alt="" width={622} height={622} className="figma-crop" sizes="(min-width: 1024px) 30vw, 70vw" />}
+        visual={<BrandVisual kind="layers" />}
       />
       <MotionEngine />
     </>

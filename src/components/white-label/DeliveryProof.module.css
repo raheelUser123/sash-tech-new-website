@@ -81,7 +81,7 @@
   padding: clamp(24px, 2vw, 40px);
   border-radius: var(--radius);
   background:
-    radial-gradient(420px circle at var(--mx) var(--my), rgba(234, 34, 41, 0.22), transparent 60%),
+    radial-gradient(420px circle at var(--mx) var(--my), rgba(121, 84, 247, 0.22), transparent 60%),
     var(--ink);
   color: var(--white);
   box-shadow: 0 40px 80px -30px rgba(60, 0, 0, 0.55);

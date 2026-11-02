@@ -22,13 +22,13 @@ export function FeaturedWork() {
             }
             text={<p>Explore websites, visual identities and creative projects from Sash Tech Digital.</p>}
             aside={
-              <Button href="/work" variant="outline-light">
+              <Button href="/portfolio" variant="outline-light">
                 All projects
               </Button>
             }
           />
 
-          <CreativeGallery limit={4} />
+          <CreativeGallery limit={6} />
         </div>
       </div>
     </section>

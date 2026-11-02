@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { HomeHero } from "@/components/home/HomeHero";
 import { AboutStatement } from "@/components/home/AboutStatement";
 import { FeaturedWork } from "@/components/home/FeaturedWork";
+import { ReelsShowcase } from "@/components/home/ReelsShowcase";
 import { WhatWeDo } from "@/components/home/WhatWeDo";
 import { Silos } from "@/components/home/Silos";
 import { Industries } from "@/components/home/Industries";
@@ -85,6 +86,7 @@ export default function HomePage() {
       <AboutStatement />
       <FeaturedWork />
       <WhatWeDo />
+      <ReelsShowcase />
       <Silos />
       <section className="section theme-paper" aria-labelledby="how-title">
         <div className="container">

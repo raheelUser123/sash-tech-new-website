@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { companyNav, legalNav, services, site } from "@/lib/site";
 import { Logo } from "@/components/ui/Logo";
+import { SocialLinks } from "./SocialLinks";
 import { FooterWordmark } from "./FooterWordmark";
 import styles from "./Footer.module.css";
 
@@ -16,6 +17,7 @@ export function Footer() {
             <p className={styles.blurb}>
               Bold design, animation, video, websites, search and digital campaigns for brands and creators ready to grow.
             </p>
+            <SocialLinks />
           </div>
 
           <nav className={styles.col} aria-labelledby="footer-services">

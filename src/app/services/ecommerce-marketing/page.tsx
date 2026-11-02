@@ -1,5 +1,5 @@
 import { Process } from "@/components/sections/Process";
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { PageHero } from "@/components/sections/PageHero";
 import { ServiceGrid } from "@/components/sections/ServiceGrid";
 import { CtaBanner } from "@/components/sections/CtaBanner";
@@ -275,8 +275,8 @@ export default function EcommerceMarketingPage() {
         text="Tell us about your store, current marketing activity and growth priorities. We'll review your requirements and discuss how paid media, creative and lifecycle marketing can work together."
         primary={{ label: "Discuss Your Growth Strategy", href: "/contact" }}
         visual={
-          <TiltVisual className="figma-crop">
-            <Image src="/images/marketing/orb-cta.png" alt="" width={580} height={580} sizes="(min-width: 1024px) 30vw, 70vw" />
+          <TiltVisual>
+            <BrandVisual kind="growth" />
           </TiltVisual>
         }
       />

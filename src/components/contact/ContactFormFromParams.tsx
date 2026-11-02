@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { comboPackages } from "@/content/pricing";
 import { ContactForm } from "./ContactForm";
 
 /**
@@ -15,5 +16,7 @@ export function ContactFormFromParams() {
     .map((s) => s.trim())
     .filter(Boolean)
     .slice(0, 12);
-  return <ContactForm key={`${kind}|${needs.join(",")}`} initialKind={kind} initialNeeds={needs} />;
+  const offer = comboPackages.find(p => p.id === params.get("package"));
+  const message = offer ? "I am interested in the " + offer.title + " combo (" + offer.discount + "% bundle savings). Please help me define the scope, deliverables and timeline, and share an itemised proposal." : "";
+  return <ContactForm key={kind + "|" + needs.join(",") + "|" + (offer?.id ?? "")} initialKind={kind} initialNeeds={needs} initialMessage={message} />;
 }

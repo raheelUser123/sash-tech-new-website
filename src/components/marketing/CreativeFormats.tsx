@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { ShapeIcon } from "@/components/ui/ShapeIcon";
 import styles from "./CreativeFormats.module.css";
 
@@ -17,7 +17,7 @@ function StaticAdVisual() {
       </div>
       <div className={`${styles.ad} ${styles.adA}`}>
         <span className={styles.adTag}>Variant A</span>
-        <Image src="/images/marketing/orb-hero.png" alt="" width={290} height={290} className={styles.adOrb} sizes="160px" />
+        <div className={styles.adOrb}><BrandVisual kind="star" compact /></div>
         <span className={styles.adHead}>
           The glow
           <br />

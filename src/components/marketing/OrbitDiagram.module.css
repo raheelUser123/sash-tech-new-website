@@ -34,11 +34,11 @@
 }
 
 .rings .ringInner {
-  stroke: rgba(234, 34, 41, 0.35);
+  stroke: rgba(121, 84, 247, 0.35);
 }
 
 .stage[data-active="true"] .rings circle:first-child {
-  stroke: rgba(234, 34, 41, 0.55);
+  stroke: rgba(121, 84, 247, 0.55);
 }
 
 /* Small satellites drifting the other way on the middle ring */
@@ -82,7 +82,7 @@
   border-radius: 50%;
   background: var(--red);
   color: var(--white);
-  box-shadow: 0 20px 50px -18px rgba(234, 34, 41, 0.7);
+  box-shadow: 0 20px 50px -18px rgba(121, 84, 247, 0.7);
 }
 
 .coreLabel {
@@ -130,7 +130,7 @@
   width: calc(var(--r) - 11.8cqi);
   height: 1.5px;
   margin-top: -0.75px;
-  background: linear-gradient(90deg, var(--red), rgba(234, 34, 41, 0.2));
+  background: linear-gradient(90deg, var(--red), rgba(121, 84, 247, 0.2));
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 0.6s var(--ease-out);
@@ -172,7 +172,7 @@
 .node[data-on="true"] .pill {
   background: var(--red);
   scale: 1.1;
-  box-shadow: 0 14px 30px -12px rgba(234, 34, 41, 0.8);
+  box-shadow: 0 14px 30px -12px rgba(121, 84, 247, 0.8);
 }
 
 .stage[data-active="true"] .node:not([data-on="true"]) .pill {

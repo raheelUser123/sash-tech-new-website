@@ -21,6 +21,7 @@ export const PROJECT_SERVICES = [
   "2D & 3D Animation",
   "Video Production",
   "YouTube Strategy",
+  "AI Search (GEO)",
   "Digital Marketing",
   "Something else",
 ] as const;

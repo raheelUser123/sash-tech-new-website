@@ -49,7 +49,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  background: radial-gradient(120% 90% at 80% 0%, rgba(234, 34, 41, 0.45), transparent 60%), var(--ink);
+  background: radial-gradient(120% 90% at 80% 0%, rgba(121, 84, 247, 0.45), transparent 60%), var(--ink);
 }
 
 .ad {
@@ -168,7 +168,7 @@
   border-radius: 18px;
   background:
     radial-gradient(80% 50% at 50% 30%, rgba(255, 255, 255, 0.35), transparent 70%),
-    linear-gradient(180deg, #f28b8f 0%, #ea2229 55%, #7a0f14 100%);
+    linear-gradient(180deg, #c7a8ff 0%, #7954f7 55%, #402a8f 100%);
   color: var(--white);
 }
 

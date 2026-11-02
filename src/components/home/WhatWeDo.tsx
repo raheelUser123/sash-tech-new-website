@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Arrow } from "@/components/ui/Button";
@@ -60,7 +60,7 @@ export function WhatWeDo() {
                 <h3 className={styles.title}>{p.title}</h3>
                 <p className={styles.tagline}>{p.tagline}</p>
                 <div className={styles.icon} aria-hidden="true">
-                  <Image src={p.icon} alt="" width={300} height={300} />
+                  <BrandVisual kind={i === 0 ? "star" : i === 1 ? "atom" : "loop"} compact />
                 </div>
                 <p className={styles.text}>{p.text}</p>
                 <ul role="list" className={styles.tags}>

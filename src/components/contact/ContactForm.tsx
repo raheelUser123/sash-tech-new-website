@@ -48,11 +48,11 @@ const EMPTY: Values = { name: "", email: "", company: "", website: "", budget: "
  * Project / partner enquiry form. `initialKind` + `initialNeeds` come from the URL
  * (?type=partner, ?need=Shopify Store,Conversion Rate Optimization) via ContactFormFromParams.
  */
-export function ContactForm({ initialKind = "project", initialNeeds = [] }: { initialKind?: Kind; initialNeeds?: string[] }) {
+export function ContactForm({ initialKind = "project", initialNeeds = [], initialMessage = "" }: { initialKind?: Kind; initialNeeds?: string[]; initialMessage?: string }) {
   const uid = useId().replace(/:/g, "");
   const id = (f: string) => `${uid}-${f}`;
   const [kind, setKind] = useState<Kind>(initialKind);
-  const [values, setValues] = useState<Values>(() => ({ ...EMPTY, services: matchServices(initialKind, initialNeeds) }));
+  const [values, setValues] = useState<Values>(() => ({ ...EMPTY, message: initialMessage, services: matchServices(initialKind, initialNeeds) }));
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<Status>("idle");

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { Glow } from "@/components/motion/Glow";
 import { TiltVisual } from "@/components/motion/TiltVisual";
 import { NewsletterForm } from "./NewsletterForm";
@@ -21,8 +21,8 @@ export function Newsletter() {
             <NewsletterForm />
           </div>
         </div>
-        <TiltVisual className={`${styles.visual} figma-crop`}>
-          <Image src="/images/insights/orb-3d.png" alt="" width={600} height={600} sizes="(min-width: 1024px) 30vw, 60vw" />
+        <TiltVisual className={styles.visual}>
+          <BrandVisual kind="prism" />
         </TiltVisual>
       </div>
     </section>

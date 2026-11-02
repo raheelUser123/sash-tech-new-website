@@ -11,7 +11,7 @@
   position: absolute;
   inset: 8% 6% 20%;
   z-index: -1;
-  background: radial-gradient(closest-side, rgba(234, 34, 41, 0.35), transparent);
+  background: radial-gradient(closest-side, rgba(121, 84, 247, 0.35), transparent);
   filter: blur(40px);
   pointer-events: none;
 }

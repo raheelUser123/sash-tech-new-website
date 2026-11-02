@@ -1,214 +1,181 @@
-import type * as Three from "three";
-
-type ThreeModule = typeof Three;
+export const PRELOADER_LOGO = "/images/sashtech/newimages/LET'S WORK TOGETHER section bottom.webp";
 
 export type PreloaderScene = {
-  /** 0–1 loading progress: the particle sphere gathers into the 3D logo as it rises. */
   setProgress: (p: number) => void;
   setPointer: (nx: number, ny: number) => void;
-  /** Animated by the exit timeline: 0 → 1 tightens and brightens, then bursts the logo. */
   uniforms: { uGather: { value: number }; uBurst: { value: number } };
   destroy: () => void;
 };
 
-/** Optimised copy of the 3D logo served by next/image (also used by the hero, so it is usually cached). */
-const LOGO_URL = "/_next/image?url=%2Fimages%2Fsashtech%2Flogo.webp&w=384&q=75";
-
-const VERTEX = /* glsl */ `
-uniform float uTime;
-uniform float uMorph;
-uniform float uGather;
-uniform float uBurst;
-uniform float uDpr;
-uniform float uScale;
-attribute vec3 aSphere;
-attribute vec3 aLogo;
-attribute vec3 aColor;
-attribute float aSeed;
-varying vec3 vColor;
-varying float vAlpha;
-void main() {
-  float m = smoothstep(aSeed * 0.55, aSeed * 0.55 + 0.45, uMorph);
-  m = m * m * (3.0 - 2.0 * m);
-
-  vec3 s = aSphere;
-  float c = cos(uTime * 0.25);
-  float sn = sin(uTime * 0.25);
-  s.xz = mat2(c, -sn, sn, c) * s.xz;
-  s += 0.16 * vec3(sin(uTime * 1.2 + aSeed * 40.0), cos(uTime * 1.05 + aSeed * 31.0), sin(uTime * 0.9 + aSeed * 23.0));
-  vec3 logo = aLogo + 0.018 * vec3(sin(uTime * 2.0 + aSeed * 50.0), cos(uTime * 1.7 + aSeed * 60.0), 0.0);
-
-  vec3 p = mix(s, logo, m) * (1.0 - uGather * 0.06);
-  vec3 dir = normalize(vec3(p.xy, 0.0) + vec3(sin(aSeed * 91.0), cos(aSeed * 53.0), 0.0) * 0.35 + vec3(0.0, 0.0, 0.8));
-  p += dir * uBurst * uBurst * (6.0 + aSeed * 14.0);
-
-  vec4 mv = modelViewMatrix * vec4(p, 1.0);
-  gl_Position = projectionMatrix * mv;
-  gl_PointSize = min(40.0, uDpr * uScale * (2.3 + m * 0.7) * (8.0 / -mv.z));
-  vColor = mix(vec3(0.78, 0.74, 0.74), aColor, m) * (1.0 + uGather * 0.6);
-  vAlpha = mix(0.42, 1.0, m) * (1.0 - smoothstep(0.55, 1.0, uBurst));
-}`;
-
-const FRAGMENT = /* glsl */ `
-varying vec3 vColor;
-varying float vAlpha;
-void main() {
-  float d = length(gl_PointCoord - 0.5);
-  float a = smoothstep(0.5, 0.1, d) * vAlpha;
-  if (a < 0.003) discard;
-  gl_FragColor = vec4(vColor * a, a);
-}`;
-
-/** Samples the 3D logo render: position from the pixel, colour from its shading, depth from its brightness. */
-async function sampleLogo(count: number) {
-  const img = new Image();
-  img.src = LOGO_URL;
-  await img.decode();
-  const w = img.naturalWidth;
-  const h = img.naturalHeight;
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) throw new Error("2d context");
-  ctx.drawImage(img, 0, 0);
-  const data = ctx.getImageData(0, 0, w, h).data;
-
+/** Draw the real brand artwork as drifting points without requiring WebGL. */
+export async function createPreloaderScene(canvas: HTMLCanvasElement): Promise<PreloaderScene | null> {
+  const image = new Image();
+  image.src = PRELOADER_LOGO;
+  await image.decode();
+  const mask = document.createElement("canvas");
+  mask.width = 480;
+  mask.height = Math.round(480 * image.naturalHeight / image.naturalWidth);
+  const sample = mask.getContext("2d", { willReadFrequently: true });
+  const ctx = canvas.getContext("2d");
+  if (!sample || !ctx) return null;
+  sample.drawImage(image, 0, 0, mask.width, mask.height);
+  const pixels = sample.getImageData(0, 0, mask.width, mask.height).data;
   const solid: number[] = [];
-  for (let i = 0; i < w * h; i++) if (data[i * 4 + 3] > 90) solid.push(i);
-  const scale = 2.5 / h;
-  const logo = new Float32Array(count * 3);
-  const color = new Float32Array(count * 3);
-  for (let k = 0; k < count; k++) {
-    const i = solid[Math.floor(Math.random() * solid.length)];
-    const x = (i % w) + Math.random() - 0.5;
-    const y = Math.floor(i / w) + Math.random() - 0.5;
-    const r = data[i * 4] / 255;
-    const g = data[i * 4 + 1] / 255;
-    const b = data[i * 4 + 2] / 255;
-    const lum = 0.3 * r + 0.59 * g + 0.11 * b;
-    logo[k * 3] = (x - w / 2) * scale;
-    logo[k * 3 + 1] = -(y - h / 2) * scale;
-    logo[k * 3 + 2] = (lum - 0.35) * 0.9;
-    // Lift the dark bevels so every particle reads on black.
-    color[k * 3] = Math.min(1.2, r * 1.35 + 0.08);
-    color[k * 3 + 1] = Math.min(1.2, g * 1.35 + 0.03);
-    color[k * 3 + 2] = Math.min(1.2, b * 1.35 + 0.04);
+  const occupied = new Uint8Array(mask.width * mask.height);
+  let left = mask.width, right = 0, top = mask.height, bottom = 0;
+  for (let i = 0; i < pixels.length; i += 4) {
+    // Use transparency for the silhouette, never the shading inside the artwork.
+    if (pixels[i + 3] < 128) continue;
+    const index = i / 4, x = index % mask.width, y = Math.floor(index / mask.width);
+    solid.push(index);
+    occupied[index] = 1;
+    left = Math.min(left, x); right = Math.max(right, x);
+    top = Math.min(top, y); bottom = Math.max(bottom, y);
   }
-  return { logo, color };
-}
-
-export async function createPreloaderScene(THREE: ThreeModule, canvas: HTMLCanvasElement): Promise<PreloaderScene | null> {
-  const count = window.innerWidth < 768 ? 3600 : 7000;
-  const { logo, color } = await sampleLogo(count);
-
-  let renderer: Three.WebGLRenderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" });
-  } catch {
-    return null;
-  }
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  renderer.setPixelRatio(dpr);
-  renderer.setClearColor(0x000000, 0);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
-  camera.position.z = 8;
-
-  // Start shape: a softly noisy sphere (Fibonacci distribution).
-  const sphere = new Float32Array(count * 3);
-  const seed = new Float32Array(count);
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < count; i++) {
-    const y = 1 - (i / (count - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const a = golden * i;
-    const radius = 2.1 * (0.88 + Math.random() * 0.24);
-    sphere[i * 3] = Math.cos(a) * r * radius;
-    sphere[i * 3 + 1] = y * radius;
-    sphere[i * 3 + 2] = Math.sin(a) * r * radius;
-    seed[i] = Math.random();
-  }
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(count * 3), 3));
-  geo.setAttribute("aSphere", new THREE.BufferAttribute(sphere, 3));
-  geo.setAttribute("aLogo", new THREE.BufferAttribute(logo, 3));
-  geo.setAttribute("aColor", new THREE.BufferAttribute(color, 3));
-  geo.setAttribute("aSeed", new THREE.BufferAttribute(seed, 1));
-  const uniforms = {
-    uTime: { value: 0 },
-    uMorph: { value: 0 },
-    uGather: { value: 0 },
-    uBurst: { value: 0 },
-    uDpr: { value: dpr },
-    uScale: { value: 1 },
-  };
-  const mat = new THREE.ShaderMaterial({
-    vertexShader: VERTEX,
-    fragmentShader: FRAGMENT,
-    uniforms,
-    transparent: true,
-    depthTest: false,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
+  if (!solid.length) return null;
+  const logoHeight = Math.max(1, bottom - top);
+  const count = window.innerWidth < 768 ? 6500 : 14500;
+  const points = Array.from({ length: count }, (_, n) => {
+    const i = solid[Math.floor(((n * 0.61803398875) % 1) * solid.length)];
+    const ambient = n > count * 0.97;
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 0.6 + Math.random() * 1.3;
+    return {
+      x: ((i % mask.width) - (left + right) / 2) / logoHeight,
+      y: (Math.floor(i / mask.width) - (top + bottom) / 2) / logoHeight,
+      sx: Math.cos(angle) * radius,
+      sy: Math.sin(angle) * radius,
+      depth: (Math.random() - 0.5) * 0.25,
+      phase: Math.random() * Math.PI * 2,
+      size: 0.6 + Math.random() * 0.45,
+      // Sample highlights from the supplied purple/blue artwork.
+      color: ambient ? 0 : 1 + Math.min(3, Math.floor((pixels[i * 4] * 0.3 + pixels[i * 4 + 1] * 0.45 + pixels[i * 4 + 2] * 0.25) / 48)),
+      ambient,
+      outline: false,
+    };
   });
-  const points = new THREE.Points(geo, mat);
-  points.frustumCulled = false;
-  const group = new THREE.Group();
-  group.add(points);
-  scene.add(group);
-
+  // Follow closed alpha contours, smooth pixel stair steps, then sample by distance.
+  // This keeps spacing even and discards tiny specks instead of outlining texture.
+  type Vertex = { x: number; y: number };
+  const edges = new Map<string, Vertex[]>();
+  const key = (x: number, y: number) => x + ":" + y;
+  const edge = (x: number, y: number, nx: number, ny: number) => {
+    const k = key(x, y);
+    const list = edges.get(k) ?? [];
+    list.push({ x: nx, y: ny });
+    edges.set(k, list);
+  };
+  for (const i of solid) {
+    const x = i % mask.width, y = Math.floor(i / mask.width);
+    if (y === 0 || !occupied[i - mask.width]) edge(x, y, x + 1, y);
+    if (x === mask.width - 1 || !occupied[i + 1]) edge(x + 1, y, x + 1, y + 1);
+    if (y === mask.height - 1 || !occupied[i + mask.width]) edge(x + 1, y + 1, x, y + 1);
+    if (x === 0 || !occupied[i - 1]) edge(x, y + 1, x, y);
+  }
+  while (edges.size) {
+    const first = edges.keys().next().value!;
+    const [x, y] = first.split(":").map(Number);
+    const contour: Vertex[] = [];
+    let v = { x, y };
+    for (let guard = 0; guard < mask.width * mask.height * 4; guard++) {
+      contour.push(v);
+      const k = key(v.x, v.y), list = edges.get(k);
+      if (!list?.length) break;
+      const next = list.pop()!;
+      if (!list.length) edges.delete(k);
+      v = next;
+      if (key(v.x, v.y) === first) break;
+    }
+    if (contour.length < 60) continue;
+    const smooth = contour.map((_, i) => {
+      const v = { x: 0, y: 0 };
+      for (let j = -2; j <= 2; j++) {
+        const p = contour[(i + j + contour.length) % contour.length];
+        v.x += p.x / 5;
+        v.y += p.y / 5;
+      }
+      return v;
+    });
+    let remaining = 0;
+    for (let i = 0; i < smooth.length; i++) {
+      const a = smooth[i], b = smooth[(i + 1) % smooth.length];
+      const length = Math.hypot(b.x - a.x, b.y - a.y);
+      if (!length) continue;
+      let distance = remaining;
+      while (distance < length) {
+        const x = a.x + (b.x - a.x) * distance / length;
+        const y = a.y + (b.y - a.y) * distance / length;
+        const angle = Math.atan2(y - (top + bottom) / 2, x - (left + right) / 2);
+        points.push({
+          x: (x - (left + right) / 2) / logoHeight,
+          y: (y - (top + bottom) / 2) / logoHeight,
+          sx: Math.cos(angle) * 1.2,
+          sy: Math.sin(angle) * 1.2,
+          depth: 0, phase: 0, size: 0.7, color: 5,
+          ambient: false, outline: true,
+        });
+        distance += 2.8;
+      }
+      remaining = distance - length;
+    }
+  }
+  const palette = ["rgba(121,84,247,.12)", "rgba(100,35,205,.8)", "rgba(127,0,255,.9)", "rgba(174,110,255,.95)", "rgba(222,190,255,1)", "rgba(127,0,255,.65)"];
+  const uniforms = { uGather: { value: 0 }, uBurst: { value: 0 } };
+  let width = 1, height = 1, dpr = 1, raf = 0, progress = 0;
+  let pointerX = 0, pointerY = 0;
+  const started = performance.now();
   const resize = () => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    // Narrow screens: shrink so the sphere/logo fits the width.
-    const visibleWidth = 2 * 8 * Math.tan((35 * Math.PI) / 360) * camera.aspect;
-    const s = Math.min(1, (visibleWidth * 0.78) / 4.6);
-    group.scale.setScalar(s);
-    uniforms.uScale.value = Math.max(0.7, s);
+    width = window.innerWidth; height = window.innerHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
   resize();
   window.addEventListener("resize", resize);
-
-  let progress = 0;
-  const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
-  let raf = 0;
-  let last = performance.now();
   const frame = (now: number) => {
-    const dt = Math.min((now - last) / 1000, 0.1);
-    last = now;
-    const k = 1 - Math.pow(1 - 0.06, dt * 60);
-    uniforms.uTime.value = now / 1000;
-    uniforms.uMorph.value += (progress - uniforms.uMorph.value) * k;
-    pointer.sx += (pointer.x - pointer.sx) * k;
-    pointer.sy += (pointer.y - pointer.sy) * k;
-    group.rotation.y = Math.sin(now / 2000) * 0.22 + pointer.sx * 0.45;
-    group.rotation.x = pointer.sy * 0.3;
-    renderer.render(scene, camera);
+    const elapsed = (now - started) / 1000;
+    const t = elapsed * 0.65;
+    // Time guarantees a recognisable logo even if network progress stalls.
+    const morph = Math.min(1, elapsed / 1.65);
+    const ease = 1 - Math.pow(1 - morph, 3);
+    const size = Math.min(height * 0.54, width * 0.64, 500);
+    const burst = uniforms.uBurst.value;
+    ctx.clearRect(0, 0, width, height);
+    ctx.globalAlpha = 1 - Math.max(0, (burst - 0.5) * 2);
+    for (let bin = 0; bin < palette.length; bin++) {
+      ctx.fillStyle = palette[bin];
+      ctx.beginPath();
+      for (const p of points) {
+        if (p.color !== bin) continue;
+        const drift = (p.outline ? 0 : 1) * (1 - uniforms.uGather.value * 0.8) * (0.0015 + (1 - progress) * 0.002);
+        let x = p.ambient ? p.sx * width * 0.4 : (p.sx * (1 - ease) + p.x * ease) * size;
+        let y = p.ambient ? p.sy * height * 0.45 : (p.sy * (1 - ease) + p.y * ease) * size;
+        x += Math.sin(t + p.phase) * size * drift + p.depth * pointerX * 18;
+        y += Math.cos(t * 0.8 + p.phase) * size * drift + p.depth * pointerY * 14;
+        x += p.sx * burst * burst * width;
+        y += p.sy * burst * burst * height;
+        const r = p.size * (p.ambient ? 0.65 : 1);
+        if (p.outline) {
+          const radius = r * Math.min(1.25, Math.max(0.75, size / 400));
+          const px = width / 2 + x, py = height * 0.48 + y;
+          ctx.moveTo(px + radius, py);
+          ctx.arc(px, py, radius, 0, Math.PI * 2);
+        } else {
+          const px = width / 2 + x, py = height * 0.48 + y;
+          ctx.moveTo(px + r, py);
+          ctx.arc(px, py, r, 0, Math.PI * 2);
+        }
+      }
+      ctx.fill();
+    }
     raf = requestAnimationFrame(frame);
   };
-  renderer.compile(scene, camera);
   raf = requestAnimationFrame(frame);
-
   return {
-    setProgress: (p) => (progress = Math.min(1, Math.max(0, p))),
-    setPointer: (nx, ny) => {
-      pointer.x = nx;
-      pointer.y = ny;
-    },
     uniforms,
-    destroy() {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-      geo.dispose();
-      mat.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
-    },
+    setProgress: p => { progress = Math.min(1, Math.max(0, p)); },
+    setPointer: (x, y) => { pointerX = x; pointerY = y; },
+    destroy() { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); ctx.clearRect(0, 0, width, height); },
   };
 }

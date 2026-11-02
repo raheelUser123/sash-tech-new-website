@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { PageHero } from "@/components/sections/PageHero";
 import { ServiceGrid } from "@/components/sections/ServiceGrid";
 import { CardGrid } from "@/components/sections/CardGrid";
@@ -244,8 +244,8 @@ export default function WhiteLabelShopifyPage() {
         primary={{ label: "Become a Partner", href: "/contact?type=partner" }}
         secondary={{ label: "Schedule a meeting", href: "/contact/schedule" }}
         visual={
-          <TiltVisual className="figma-crop">
-            <Image src="/images/white-label/atom-3d.png" alt="" width={700} height={620} sizes="(min-width: 1024px) 30vw, 80vw" />
+          <TiltVisual>
+            <BrandVisual kind="layers" />
           </TiltVisual>
         }
       />

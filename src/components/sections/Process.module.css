@@ -97,7 +97,7 @@
 
 @media (min-width: 900px) {
   .process[role="list"] {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr));
     gap: 24px;
     padding: clamp(80px, 6vw, 110px) 0 0;
     min-height: 0;
@@ -125,7 +125,7 @@
     display: block;
     position: absolute;
     top: 50%;
-    left: calc(var(--i) * (100% + 24px) / 4);
+    left: calc(var(--i) * (100% + 24px) / var(--steps, 4));
     width: 15px;
     height: 15px;
     margin-top: -7.5px;

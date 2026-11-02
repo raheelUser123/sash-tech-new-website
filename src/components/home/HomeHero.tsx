@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { Glow } from "@/components/motion/Glow";
 import { TiltVisual } from "@/components/motion/TiltVisual";
 import { Button } from "@/components/ui/Button";
@@ -20,10 +21,10 @@ export function HomeHero() {
           <div className={styles.copy}>
             <div data-reveal="fade" data-immediate data-delay="0.1">
               <Image
-                src="/images/sashtech/mark.png"
+                src="/images/logo.webp"
                 alt="Sash Tech Digital"
-                width={52}
-                height={52}
+                width={320}
+                height={278}
                 className={styles.partner}
                 priority
               />
@@ -35,21 +36,14 @@ export function HomeHero() {
 
           <div className={styles.side} data-particle-origin>
             <TiltVisual className={styles.visual}>
-              <Image
-                src="/images/sashtech/hero-image.webp"
-                alt="Creative design and animation workspace"
-                width={514}
-                height={520}
-                priority
-                sizes="(min-width: 1024px) 27vw, 60vw"
-              />
+              <BrandVisual kind="orbit" />
             </TiltVisual>
             <p className={`body ${styles.text}`} data-reveal data-immediate data-delay="0.45">
               We help businesses, creators, and authors scale their digital presence through high end design, video, and strategic growth.
             </p>
             <div className={styles.actions} data-reveal data-immediate data-delay="0.6">
               <Button href="/contact">Start a project</Button>
-              <Button href="/work" variant="outline-light">
+              <Button href="/portfolio" variant="outline-light">
                 See our work
               </Button>
             </div>

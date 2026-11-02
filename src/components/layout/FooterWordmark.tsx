@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/components/motion/gsap";
 import styles from "./Footer.module.css";
 
-const WORDS = ["Sash", "Tech"];
+const WORDS = ["Sash", "Tech", "Digital"];
 
 /** Giant brand wordmark; letters rise in a wave as the footer scrolls into view and react to hover. */
 export function FooterWordmark() {

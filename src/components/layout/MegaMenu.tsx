@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { BrandVisual, serviceVisuals } from "@/components/ui/BrandVisual";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { services } from "@/lib/site";
@@ -101,7 +101,7 @@ export function MegaMenu({ id, open, pathname }: { id: string; open: boolean; pa
           <div className={styles.visuals} data-visuals>
             {services.map((s, i) => (
               <div key={s.href} className={styles.visual} data-active={active === i}>
-                <Image src={s.visual} alt="" width={420} height={420} sizes="260px" className="figma-crop" />
+                <BrandVisual kind={serviceVisuals[i]} compact />
               </div>
             ))}
           </div>

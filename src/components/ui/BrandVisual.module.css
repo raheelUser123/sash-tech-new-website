@@ -1,0 +1,13 @@
+.stage { width:100%; aspect-ratio:1; position:relative; display:grid; place-items:center; isolation:isolate; }
+.art { width:100%; height:auto; overflow:visible; filter:drop-shadow(0 22px 24px rgba(65,37,125,.12)); }
+.object { transform-origin:240px 240px; animation:levitate 7s ease-in-out infinite; }
+.rings { transform-origin:240px 240px; animation:orbit 28s linear infinite; }
+.scan { animation:shift 4s ease-in-out infinite alternate; }
+.bar { animation:shift 5s ease-in-out infinite alternate; }
+.draw { stroke-dasharray:1600; stroke-dashoffset:1600; animation:trace 3s ease forwards; }
+.stage[data-compact=true] { max-width:260px; margin:auto; }
+@keyframes levitate { 50% { transform:translateY(-9px) rotate(2deg); } }
+@keyframes orbit { to { transform:rotate(360deg); } }
+@keyframes shift { to { transform:translateY(-8px); } }
+@keyframes trace { to { stroke-dashoffset:0; } }
+@media(prefers-reduced-motion:reduce) { .object,.rings,.scan,.bar,.draw { animation:none; } .draw { stroke-dashoffset:0; } }

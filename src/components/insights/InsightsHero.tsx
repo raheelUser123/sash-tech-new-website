@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { Glow } from "@/components/motion/Glow";
 import { TiltVisual } from "@/components/motion/TiltVisual";
 import styles from "./InsightsHero.module.css";
@@ -22,7 +22,7 @@ type Props = {
  * Dark hero for the Insights pages. Same look as the shared PageHero, but with a wider copy
  * column (the Figma headlines are ~1018px wide at 1920) and optional slots around the h1.
  */
-export function InsightsHero({ title, before, children, tagline, visual }: Props) {
+export function InsightsHero({ title, before, children, tagline }: Props) {
   return (
     <section className={`${styles.hero} theme-dark`} aria-labelledby="page-title">
       <Glow />
@@ -34,8 +34,8 @@ export function InsightsHero({ title, before, children, tagline, visual }: Props
           </h1>
           {children}
         </div>
-        <TiltVisual className={`${styles.visual} figma-crop`}>
-          <Image src={visual.src} alt="" width={visual.width} height={visual.height} priority sizes="(min-width: 1024px) 30vw, 60vw" />
+        <TiltVisual className={styles.visual}>
+          <BrandVisual kind="network" />
         </TiltVisual>
       </div>
       <div className={`container ${styles.bottom}`}>

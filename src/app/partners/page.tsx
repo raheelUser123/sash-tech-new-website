@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { PageHero } from "@/components/sections/PageHero";
 import { CardGrid } from "@/components/sections/CardGrid";
 import { CheckList } from "@/components/sections/CheckList";
@@ -240,8 +240,8 @@ export default function PartnersPage() {
         primary={{ label: "Become a Partner", href: "/contact?type=partner" }}
         secondary={{ label: "Discuss a Project", href: "/contact" }}
         visual={
-          <TiltVisual className="figma-crop">
-            <Image src="/images/partners/infinity-3d.png" alt="" width={730} height={545} sizes="(min-width: 1024px) 30vw, 80vw" />
+          <TiltVisual>
+            <BrandVisual kind="loop" />
           </TiltVisual>
         }
       />

@@ -151,3 +151,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.description { margin-top:14px; font-size:15px; line-height:1.65; max-width:55ch; opacity:.72; }
+.inner { padding-top:115px; min-height:360px; transition:color .4s; }
+.title { max-width:95%; }
+.light { --bd:rgba(38,26,63,.22); }
+@media (hover:none) { .tags li { border-color:currentColor; } }
+@media(prefers-reduced-motion:reduce) { .inner::before,.icon,.tags { transition:none; } }
+
+@media(min-width:800px) { .card:last-child:nth-child(odd) { grid-column:1 / -1; }.card:last-child:nth-child(odd) .inner { min-height:300px; } }

@@ -17,7 +17,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(60% 50% at 90% 0%, rgba(234, 34, 41, 0.18), transparent 70%);
+  background: radial-gradient(60% 50% at 90% 0%, rgba(121, 84, 247, 0.18), transparent 70%);
 }
 
 .dash:hover {

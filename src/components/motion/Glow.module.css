@@ -32,7 +32,7 @@
     radial-gradient(
       70% 95% at calc(var(--gx) + var(--px) * 1%) calc(var(--gy) + var(--py) * 1%),
       rgba(108, 76, 255, 0.7) 0%,
-      rgba(160, 18, 26, 0.45) 30%,
+      rgba(64, 42, 143, 0.45) 30%,
       rgba(11, 11, 12, 0) 72%
     ),
     var(--ink);

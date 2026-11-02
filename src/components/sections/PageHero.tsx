@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual, visualFromSource, type VisualKind } from "@/components/ui/BrandVisual";
 import { Glow } from "@/components/motion/Glow";
 import { TiltVisual } from "@/components/motion/TiltVisual";
 import { Button } from "@/components/ui/Button";
@@ -13,7 +13,7 @@ type Props = {
   secondary?: Action;
   /** "[ SHOPIFY · SHOPIFY PLUS · … ]" line under the divider. */
   tagline?: string;
-  visual?: { src: string; width: number; height: number; className?: string };
+  visual?: { src: string; width: number; height: number; className?: string; kind?: VisualKind };
   /** Extra content placed under the buttons (e.g. a partner badge). */
   children?: React.ReactNode;
 };
@@ -44,8 +44,8 @@ export function PageHero({ title, text, primary, secondary, tagline, visual, chi
           {children}
         </div>
         {visual && (
-          <TiltVisual className={[styles.visual, visual.className].filter(Boolean).join(" ")}>
-            <Image src={visual.src} alt="" width={visual.width} height={visual.height} priority sizes="(min-width: 1024px) 30vw, 60vw" />
+          <TiltVisual className={[styles.visual].filter(Boolean).join(" ")}>
+            <BrandVisual kind={visual.kind ?? visualFromSource(visual.src)} />
           </TiltVisual>
         )}
       </div>

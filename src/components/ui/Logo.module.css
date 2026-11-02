@@ -19,14 +19,18 @@
 
 .mark {
   width: auto;
-  height: 1.9em;
+  height: auto;
+  width: 82px;
+  object-fit: contain;
   transition: transform 0.8s var(--ease-out);
 }
 
 .logo:hover .mark {
-  transform: rotate(-8deg) scale(1.06);
+  transform: scale(1.03);
 }
 
 .word b {
   font-weight: 400;
 }
+
+.lg .mark { width: clamp(110px, 10vw, 160px); }

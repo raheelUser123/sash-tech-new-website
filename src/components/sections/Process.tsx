@@ -102,7 +102,7 @@ export function Process({ steps, theme = "light" }: { steps: ProcessStep[]; them
   );
 
   return (
-    <ol ref={ref} className={`${styles.process} ${styles[theme]}`} role="list">
+    <ol ref={ref} className={`${styles.process} ${styles[theme]}`} style={{ "--steps": steps.length } as React.CSSProperties} role="list">
       <span className={styles.track} aria-hidden="true">
         <span className={styles.progress} data-progress />
         {steps.map((step, i) => (

@@ -138,3 +138,11 @@
     grid-column: auto;
   }
 }
+
+.socials { display:flex;align-items:center;gap:10px;margin-top:24px; }
+.socialIcon,.socialPending { width:42px;height:42px;display:inline-grid;place-items:center;border:1px solid #9c79e74d;border-radius:50%;color:#bb96ff;background:#7954f70d; }
+.socialIcon { transition:background .25s,color .25s,translate .25s,border-color .25s; }
+.socialIcon:hover { background:var(--red);border-color:var(--red);color:white;translate:0 -3px; }
+.socialIcon:focus-visible { outline:2px solid #c9aaff;outline-offset:4px; }
+.socialPending { opacity:.5; }
+@media(prefers-reduced-motion:reduce) { .socialIcon { transition:none; } }

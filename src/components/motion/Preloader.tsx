@@ -3,17 +3,17 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap, isFinePointer, prefersReducedMotion } from "./gsap";
-import { introPending, releaseIntro } from "./intro";
-import { createPreloaderScene, type PreloaderScene } from "./preloaderScene";
+import { releaseIntro } from "./intro";
+import { createPreloaderScene, PRELOADER_LOGO, type PreloaderScene } from "./preloaderScene";
 import styles from "./Preloader.module.css";
 
 /** Shortest and longest time the preloader stays up (ms). */
-const MIN_TIME = 1900;
+const MIN_TIME = 3600;
 const MIN_TIME_REDUCED = 500;
 const MAX_TIME = 7000;
 
 const RING = 2 * Math.PI * 52;
-const WORDS = ["Create", "Design", "Grow"];
+const WORDS = ["Design", "Build", "Grow"];
 const SCROLL_KEYS = new Set(["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "]);
 
 /**
@@ -27,7 +27,8 @@ export function Preloader() {
 
   useEffect(() => {
     const el = root.current;
-    if (!el || !introPending()) return;
+    if (!el) return;
+    document.documentElement.classList.add("is-preloading");
 
     const q = <T extends Element = HTMLElement>(sel: string) => el.querySelector<T>(sel)!;
     const panel = q("[data-pl-panel]");
@@ -91,20 +92,23 @@ export function Preloader() {
     let cancelled = false;
     let tl: gsap.core.Timeline | null = null;
 
-    // three.js particle logo (loaded on demand). Until it is ready, the ring + mark show progress.
+    // Image-sampled particles; keep the real logo visible until the scene is ready.
     let scene: PreloaderScene | null = null;
+    let sceneReadyAt = 0;
+    let sceneSettled = reduced;
     if (!reduced) {
-      import("three")
-        .then((THREE) => createPreloaderScene(THREE, canvas))
+      createPreloaderScene(canvas)
         .then((s) => {
+          sceneSettled = true;
           if (!s) return;
           if (cancelled || leaving) return s.destroy();
           scene = s;
+          sceneReadyAt = performance.now();
           s.setProgress(shown / 100);
           gsap.to(canvas, { opacity: 1, duration: 0.9, ease: "power2.out" });
           gsap.to(mark, { opacity: 0, scale: 0.8, duration: 0.6, ease: "power2.in" });
         })
-        .catch(() => {});
+        .catch(() => { sceneSettled = true; });
     }
 
     const render = () => {
@@ -124,6 +128,7 @@ export function Preloader() {
       // finishing in a blink.
       const creep = 90 * (1 - Math.exp(-elapsed / 2600));
       let goal = Math.min(Math.max(12 + loaded * 88, loaded < 1 ? creep : 100), (elapsed / minTime) * 100);
+      if (!reduced && (!sceneSettled || (scene && performance.now() - sceneReadyAt < 2600))) goal = Math.min(goal, 92);
       if (elapsed > MAX_TIME) goal = 100;
       const ease = 1 - Math.pow(1 - 0.09, deltaMs / 16.67);
       shown += (goal - shown) * ease;
@@ -236,7 +241,7 @@ export function Preloader() {
               <circle cx="60" cy="60" r="52" className={styles.track} />
               <circle cx="60" cy="60" r="52" className={styles.progress} data-pl-ring strokeDasharray={RING} strokeDashoffset={RING} />
             </svg>
-            <Image src="/images/sashtech/mark.png" alt="" width={78} height={72} priority className={styles.logo} />
+            <Image src={PRELOADER_LOGO} alt="" width={1536} height={1024} unoptimized preload className={styles.logo} />
           </div>
         </div>
 

@@ -2,11 +2,11 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: min(100svh, 860px);
+  min-height: min(92svh, 900px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-top: clamp(120px, 12vw, 230px);
+  padding-top: clamp(130px, 10vw, 190px);
   padding-bottom: clamp(32px, 2.4vw, 46px);
 }
 
@@ -42,7 +42,7 @@
 .visual {
   justify-self: center;
   width: min(70vw, 420px);
-  order: -1;
+  order: 1;
 }
 
 .bottom {
@@ -66,7 +66,7 @@
 
 @media (min-width: 1024px) {
   .inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 32%);
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   }
 
   .visual {
@@ -76,3 +76,5 @@
     justify-self: end;
   }
 }
+
+@media(max-width:1023px) { .visual { width:min(65vw,340px); }.inner { gap:20px; } }

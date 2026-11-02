@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BrandVisual } from "@/components/ui/BrandVisual";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import styles from "./Agencies.module.css";
@@ -21,7 +21,7 @@ export function Agencies() {
             </Button>
           </div>
         </div>
-        <div style={{ position: "relative", width: "100%", maxWidth: 1100, aspectRatio: "16 / 8", margin: "52px auto 0", overflow: "hidden", borderRadius: 24 }}><Image src="/images/sashtech/newimages/WHY CHOOSE US Section.webp" alt="Sash Tech creative workflow" fill sizes="(min-width: 900px) 75vw, 90vw" style={{ objectFit: "cover" }} /></div>
+        <div style={{ width: "min(100%, 440px)", margin: "40px auto 0" }}><BrandVisual kind="loop" /></div>
       </div>
     </section>
   );

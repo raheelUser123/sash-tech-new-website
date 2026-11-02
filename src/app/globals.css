@@ -347,3 +347,10 @@ button {
   mix-blend-mode: lighten;
   mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
 }
+
+/* Original abstract artwork, recolored to the Sash Tech violet palette. */
+:root .abstract-visual {
+  object-fit: contain !important;
+  filter: grayscale(1) sepia(1) saturate(4) hue-rotate(215deg);
+  mask-image: radial-gradient(ellipse at center, #000 42%, transparent 72%);
+}

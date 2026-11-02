@@ -5,9 +5,9 @@ import { useState } from "react";
 import { ShapeIcon, type Shape } from "@/components/ui/ShapeIcon";
 import styles from "./ServiceGrid.module.css";
 
-export type ServiceCard = { title: string; tags: string[]; shape: Shape; href?: string };
+export type ServiceCard = { title: string; text?: string; tags: string[]; shape: Shape; href?: string };
 
-const SHAPES: Shape[] = ["pinwheel", "petals", "cross", "brackets"];
+const SHAPES: Shape[] = ["pinwheel", "petals", "cross", "brackets", "diamond", "sun", "wave"];
 
 /**
  * 2×2 service cards. One card is "active" (red, with its capability tags); hovering or
@@ -27,6 +27,7 @@ export function ServiceGrid({ items, tone = "dark" }: { items: Omit<ServiceCard,
             </span>
             <ShapeIcon shape={shape} className={styles.icon} />
             <h3 className={styles.title}>{item.title}</h3>
+            {item.text && <p className={styles.description}>{item.text}</p>}
             <ul role="list" className={styles.tags} aria-label={`${item.title} capabilities`}>
               {item.tags.map((t) => (
                 <li key={t}>{t}</li>

@@ -302,3 +302,13 @@
     animation: none;
   }
 }
+
+.visual > div { width:min(100%,260px); }
+
+.mega { max-height:calc(100svh - 142px); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#7954f7 transparent; }
+.item { gap:12px; padding:10px 12px; }
+.itemTitle { font-size:clamp(1rem,1.1vw,1.2rem); line-height:1.25; }
+.itemDesc { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:12px; line-height:1.45; }
+.num { padding-top:2px; }
+.preview,.side { max-height:620px; }
+.preview { min-height:410px; }

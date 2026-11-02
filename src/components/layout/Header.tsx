@@ -213,7 +213,7 @@ export function Header() {
       >
         <nav aria-label="Mobile" className={styles.menuInner}>
           <ul role="list" className={styles.menuList}>
-            {[mainNav[0], ...mainNav.slice(1), { label: "Contact", href: "/contact" }].map((l) => (
+            {mainNav.map((l) => (
               <li key={l.href} className={styles.menuRow}>
                 <Link href={l.href} className={styles.menuLink} data-menu-item onClick={closeMenu}>
                   {l.label}
