@@ -18,11 +18,7 @@ async function isPublishedPost(slug: string) {
   }
 }
 
-/**
- * With Cache Components, `dynamicParams = false` isn't available, so unknown article or
- * case-study slugs would render the not-found UI with a 200 status (a "soft 404"). Rewriting them
- * to a path that doesn't exist makes Next serve the 404 page with a real 404 status.
- */
+
 export async function proxy(request: NextRequest) {
   const [, section, raw] = request.nextUrl.pathname.split("/");
   if (!raw) return NextResponse.next();

@@ -1,7 +1,7 @@
 export const site = {
   name: "Sash Tech Digital",
   shortName: "Sash Tech",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://sashtech.digital").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://sashtech.digital").replace(/\/+$/, ""),
   description:
     "Creative design, animation, video, websites, SEO and digital campaigns for brands ready to grow.",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "info@sashtech.digital",
