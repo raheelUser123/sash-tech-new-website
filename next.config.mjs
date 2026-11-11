@@ -12,6 +12,7 @@ const wordpressHost = new URL(process.env.WORDPRESS_API_URL || "https://blogs.th
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
