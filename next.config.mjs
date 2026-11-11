@@ -8,7 +8,6 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
-const wordpressHost = new URL(process.env.WORDPRESS_API_URL || "https://blogs.theactivesolutions.com/wp-json/wp/v2").hostname;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,8 +18,6 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85],
-    // Featured images of WordPress posts (see src/lib/wordpress).
-    remotePatterns: [{ protocol: "https", hostname: wordpressHost, pathname: "/wp-content/uploads/**" }],
   },
   async redirects() {
     return [

@@ -44,3 +44,7 @@ next-env.d.ts
 
 # Local PHP reference contains server credentials; the Next.js site uses copied public assets.
 /sashtech/
+
+# cPanel runtime and logs
+/tmp/
+/passenger.log

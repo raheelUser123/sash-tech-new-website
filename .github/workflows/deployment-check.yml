@@ -1,0 +1,42 @@
+name: Deployment checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux-build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    env:
+      NEXT_PUBLIC_SITE_URL: https://sashtech.digital
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+          cache: npm
+      - run: npm ci --include=dev --include=optional
+      - run: npm run audit:imports
+      - run: npm run typecheck
+      - run: npm run test:contact
+      - run: node scripts/prepare-swc.cjs && npm run check:swc
+      - run: npm run build
+      - run: npm run prepare:standalone
+      - run: npm run test:standalone
+      - name: Validate WASM compiler fallback with Webpack
+        run: npm run build
+        env:
+          NEXT_TEST_WASM: '1'
+      - run: npm run prepare:standalone
+      - run: npm run test:standalone
+      - name: Package Linux standalone output
+        run: tar -czf standalone-linux-x64.tar.gz server.js .next/standalone
+      - uses: actions/upload-artifact@v4
+        with:
+          name: standalone-linux-x64-node22
+          path: standalone-linux-x64.tar.gz
+          retention-days: 7

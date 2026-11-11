@@ -6,7 +6,15 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit:imports": "node scripts/audit-imports.cjs",
+    "check:swc": "node scripts/check-swc.cjs",
+    "typecheck": "next typegen && tsc --noEmit",
+    "prepare:standalone": "node scripts/prepare-standalone.cjs",
+    "start:cpanel": "node server.js",
+    "prebuild": "node scripts/prepare-swc.cjs",
+    "test:contact": "node scripts/test-contact.cjs",
+    "test:standalone": "node scripts/smoke-standalone.cjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -17,7 +25,8 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "sanitize-html": "^2.18.1",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "@next/swc-wasm-nodejs": "16.4.3"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
@@ -29,5 +38,8 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "16.4.3",
     "typescript": "~6.0.3"
+  },
+  "engines": {
+    "node": "^22.0.0 || ^24.0.0"
   }
 }
