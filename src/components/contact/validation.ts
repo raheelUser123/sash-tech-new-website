@@ -83,7 +83,7 @@ function urlError(value: string): string | undefined {
 /* ------------------------------------------------------------------ contact */
 
 export type ContactPayload = {
-  kind: "project" | "partner";
+  kind: "project" | "individual" | "partner";
   name: string;
   email: string;
   company: string;
@@ -95,7 +95,7 @@ export type ContactPayload = {
 };
 
 export function validateContact(input: Input): { data: ContactPayload; errors: Errors } {
-  const kind = input.kind === "partner" ? "partner" : "project";
+  const kind = input.kind === "partner" ? "partner" : input.kind === "individual" ? "individual" : "project";
   const allowed: readonly string[] = kind === "partner" ? PARTNER_SERVICES : PROJECT_SERVICES;
   const data: ContactPayload = {
     kind,

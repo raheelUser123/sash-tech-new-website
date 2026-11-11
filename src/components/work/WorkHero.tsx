@@ -18,7 +18,7 @@ export function WorkHero() {
       <div className={`container ${styles.inner}`}>
         <div className={styles.copy}>
           <p className={styles.kicker} data-reveal="fade" data-immediate>
-            [ SELECTED WORK ]
+            SELECTED WORK
           </p>
           <h1 id="page-title" className="display" data-split data-immediate>
             Shopify stores we built <em>to grow.</em>

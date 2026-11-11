@@ -58,7 +58,7 @@ export default function ContactPage() {
             </p>
 
             <p className={styles.kicker} data-reveal="fade" data-immediate data-delay="0.45">
-              [ Visit Us ]
+              Visit Us
             </p>
             <div data-reveal data-immediate data-delay="0.5">
               <address className={styles.address}>

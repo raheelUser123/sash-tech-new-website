@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./Article.module.css";
 
 /**
- * "[ IN THIS ARTICLE ]" — sticky table of contents. The entry for the heading that was
+ * "IN THIS ARTICLE" — sticky table of contents. The entry for the heading that was
  * last scrolled past the upper third of the viewport is highlighted (aria-current).
  */
 export function ArticleToc({ items }: { items: { id: string; text: string }[] }) {
@@ -42,7 +42,7 @@ export function ArticleToc({ items }: { items: { id: string; text: string }[] })
   return (
     <nav className={styles.toc} aria-labelledby="toc-title">
       <h2 id="toc-title" className={styles.asideLabel}>
-        [ IN THIS ARTICLE ]
+        IN THIS ARTICLE
       </h2>
       <ol role="list" className={styles.tocList}>
         {items.map((item) => (

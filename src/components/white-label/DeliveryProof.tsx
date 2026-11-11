@@ -51,7 +51,7 @@ export function DeliveryProof() {
               </span>
               <span>
                 <b>The Active Solutions</b>
-                <small>[ white-label delivery team ]</small>
+                <small>white-label delivery team</small>
               </span>
             </figcaption>
           </figure>

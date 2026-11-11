@@ -27,7 +27,7 @@ function Star() {
   );
 }
 
-/** "[ CLIENT PROOF ]" — laptop case study, big count-up stat and a client testimonial. */
+/** "CLIENT PROOF" — laptop case study, big count-up stat and a client testimonial. */
 export function ClientProof() {
   return (
     <section className="section theme-paper" aria-labelledby="proof-title">

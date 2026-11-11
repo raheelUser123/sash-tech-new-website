@@ -54,7 +54,7 @@ export function HeroScene() {
     };
   }, []);
 
-  return <canvas ref={ref} className={styles.scene} aria-hidden="true" />;
+  return <canvas ref={ref} className={`${styles.scene} ${styles.textScene}`} aria-hidden="true" />;
 }
 
 /** Overall brightness of the background dot field. */
@@ -437,7 +437,7 @@ function createScene(THREE: ThreeModule, canvas: HTMLCanvasElement, hero: HTMLEl
     }
 
     renderer.clear();
-    renderer.render(waveScene, waveCamera);
+
     if (textPoints && (textU.uIntroVis.value > 0.001 || textU.uLens.value > 0.5)) renderer.render(textScene, textCamera);
     if (!reduced) schedule();
   };
@@ -476,7 +476,7 @@ function createScene(THREE: ThreeModule, canvas: HTMLCanvasElement, hero: HTMLEl
   }
   ro.observe(hero);
   io.observe(hero);
-  renderer.compile(waveScene, waveCamera);
+
   renderer.compile(textScene, textCamera);
 
   hero.addEventListener("pointermove", onMove);

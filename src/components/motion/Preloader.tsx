@@ -232,7 +232,7 @@ export function Preloader() {
         <canvas className={styles.canvas} data-pl-canvas />
         <div className={styles.top}>
           <span data-pl-out>Sash Tech Digital</span>
-          <span data-pl-out>[ CREATIVE · STRATEGY · GROWTH ]</span>
+          <span data-pl-out>CREATIVE · STRATEGY · GROWTH</span>
         </div>
 
         <div className={styles.center}>

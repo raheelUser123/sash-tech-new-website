@@ -2,7 +2,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CurvedGallery } from "@/components/home/CurvedGallery";
 import styles from "./WhoWeAre.module.css";
 
-/** "[ WHO WE ARE ]" scroll-filled statement, then the curved panorama under "Built in Karachi. Working everywhere." */
+/** "WHO WE ARE" scroll-filled statement, then the curved panorama under "Built in Karachi. Working everywhere." */
 export function WhoWeAre() {
   return (
     <section className={`section theme-paper ${styles.section}`} aria-labelledby="who-title">

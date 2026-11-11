@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Article.module.css";
 
-/** "[ SHARE ]" — LinkedIn, X and copy-link buttons. */
+/** "SHARE" — LinkedIn, X and copy-link buttons. */
 export function ShareLinks({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState<"idle" | "copied" | "failed">("idle");
   const timer = useRef<number | undefined>(undefined);
@@ -25,7 +25,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
 
   return (
     <div className={styles.share}>
-      <h2 className={styles.asideLabel}>[ SHARE ]</h2>
+      <h2 className={styles.asideLabel}>SHARE</h2>
       <ul role="list" className={styles.shareList}>
         <li>
           <a

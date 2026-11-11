@@ -44,7 +44,7 @@ export function CaseHero({ project }: { project: Project }) {
         </nav>
 
         <p className={styles.kicker} data-reveal="fade" data-immediate data-delay="0.1">
-          [ CASE STUDY · {project.industry.toUpperCase()} ]
+          CASE STUDY · {project.industry.toUpperCase()}
         </p>
         <h1 id="page-title" className={`display ${styles.title}`} data-split data-immediate>
           {withAccent(project.headline)}

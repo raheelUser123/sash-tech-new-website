@@ -22,7 +22,7 @@ export function AuthorCard({ author }: { author: InsightAuthor }) {
         </span>
       )}
       <div>
-        <p className={styles.authorName}>[ AUTHOR <span style={{ whiteSpace: "nowrap" }}>{author.name} ]</span></p>
+        <p className={styles.authorName}>AUTHOR <span style={{ whiteSpace: "nowrap" }}>{author.name}</span></p>
         <p className={styles.authorRole}>{author.role}</p>
       </div>
       <p className={styles.authorText}>Writes about Shopify builds, growth and the decisions behind them.</p>

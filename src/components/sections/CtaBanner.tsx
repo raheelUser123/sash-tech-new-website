@@ -4,7 +4,7 @@ import styles from "./CtaBanner.module.css";
 
 type Action = { label: string; href: string };
 
-/** Closing "[ LET'S TALK ] Ready to …" banner on dark with a floating visual. */
+/** Closing "LET'S TALK Ready to …" banner on dark with a floating visual. */
 export function CtaBanner({
   title,
   text,
@@ -26,7 +26,7 @@ export function CtaBanner({
       <div className={`container ${styles.inner}`}>
         <div className={styles.copy}>
           <p className={styles.eyebrow} data-reveal="fade">
-            [ {eyebrow} ]
+            {eyebrow}
           </p>
           <h2 id="cta-title" className="display" data-split>
             {title}

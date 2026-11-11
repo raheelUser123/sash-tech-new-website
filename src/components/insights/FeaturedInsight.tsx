@@ -6,7 +6,7 @@ import { InsightMeta } from "./InsightMeta";
 import { SectionLabel } from "./SectionLabel";
 import styles from "./FeaturedInsight.module.css";
 
-/** "[ FEATURED ]" — large cover on the left, headline, excerpt, meta and "Read article" on the right. */
+/** "FEATURED" — large cover on the left, headline, excerpt, meta and "Read article" on the right. */
 export function FeaturedInsight({ article }: { article: Insight }) {
   const href = insightPath(article.slug);
   return (

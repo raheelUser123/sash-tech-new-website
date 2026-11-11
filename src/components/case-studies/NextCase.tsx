@@ -9,7 +9,7 @@ export function NextCase({ project }: { project: Project }) {
     <section className={`${styles.next} theme-dark`} aria-label="Next case study">
       <Link href={caseStudyPath(project.slug)} className={styles.link} data-cursor="Next">
         <span className={`container ${styles.inner}`}>
-          <span className={styles.kicker}>[ NEXT CASE STUDY ]</span>
+          <span className={styles.kicker}>NEXT CASE STUDY</span>
           <span className={styles.row}>
             <span className={styles.name}>{project.name}</span>
             <span className={styles.go} aria-hidden="true">

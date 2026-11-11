@@ -46,7 +46,7 @@ export default function CaseStudiesPage() {
         <Glow />
         <div className={`container ${styles.heroInner}`}>
           <p className={styles.kicker} data-reveal="fade" data-immediate>
-            [ CASE STUDIES ]
+            CASE STUDIES
           </p>
           <div className={styles.heroRow}>
             <h1 id="page-title" className="display" data-split data-immediate>

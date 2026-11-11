@@ -15,7 +15,7 @@ export function AboutStatement() {
             We bring <em>creativity, strategy and technology</em> together to make brands, stories and digital experiences stand out.
           </p>
           <p className={styles.note} data-reveal="fade">
-            [ CREATIVE · STRATEGY · GROWTH ]
+            CREATIVE · STRATEGY · GROWTH
           </p>
         </div>
       </div>

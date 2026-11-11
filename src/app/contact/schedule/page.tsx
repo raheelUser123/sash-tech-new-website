@@ -78,7 +78,7 @@ export default function SchedulePage() {
 
             <div className={styles.cover}>
               <h2 id="cover-title" className={styles.kicker} data-reveal="fade">
-                [ What we&apos;ll cover ]
+                What we&apos;ll cover
               </h2>
               <ul role="list" className={styles.coverList} aria-labelledby="cover-title" data-reveal-stagger="0.07">
                 {COVER.map((item) => (

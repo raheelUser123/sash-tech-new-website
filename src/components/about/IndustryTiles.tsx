@@ -8,7 +8,7 @@ const INDUSTRIES = [
   { name: "Food & Beverage", count: 9 },
 ];
 
-/** "[ WHO WE WORK WITH ]": four bordered category cells; the first is lit red until another is hovered. */
+/** "WHO WE WORK WITH": four bordered category cells; the first is lit red until another is hovered. */
 export function IndustryTiles() {
   return (
     <section className="section theme-paper" aria-labelledby="industries-title">

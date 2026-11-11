@@ -5,7 +5,7 @@ import styles from "./Location.module.css";
 
 const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=AG+Trade+Center+Gulistan-e-Johar+Karachi";
 
-/** "[ WHERE WE ARE ]": office map + dark "Visit us" card with the markets we serve. */
+/** "WHERE WE ARE": office map + dark "Visit us" card with the markets we serve. */
 export function Location() {
   return (
     <section className="section theme-paper" aria-labelledby="where-title">
@@ -37,7 +37,7 @@ export function Location() {
             </span>
           </a>
           <div className={`${styles.card} theme-dark`} data-reveal data-delay="0.1">
-            <p className={styles.label}>[ VISIT US ]</p>
+            <p className={styles.label}>VISIT US</p>
             <address className={styles.address}>
               Office-403, AG Trade Center,
               <br /> Block 14 Gulistan-e-Johar,

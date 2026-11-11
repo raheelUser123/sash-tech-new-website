@@ -42,7 +42,7 @@ export function InsightsHero({ title, before, children, tagline }: Props) {
         <span className={styles.rule} data-reveal="line" data-immediate data-delay="0.4" aria-hidden="true" />
         {tagline && (
           <p className={styles.tagline} data-reveal="fade" data-immediate data-delay="0.7">
-            [ {tagline} ]
+            {tagline}
           </p>
         )}
       </div>

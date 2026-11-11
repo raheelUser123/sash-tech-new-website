@@ -189,4 +189,9 @@
   }
 }
 
-.icon > div { width:min(100%,270px); height:100%; aspect-ratio:1; }
+.icon > div { width:min(100%,220px); height:auto; max-height:100%; aspect-ratio:1; }
+
+.icon { height:clamp(200px,18vw,270px); padding:20px; margin-block:24px 32px; overflow:hidden; }
+.icon svg { display:block; width:100%; height:100%; }
+.tagline { min-height:2.5em; }
+.tags + .link { margin-top:28px; }

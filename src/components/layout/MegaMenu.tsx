@@ -70,7 +70,7 @@ export function MegaMenu({ id, open, pathname }: { id: string; open: boolean; pa
       <div className={styles.grid}>
         <div className={styles.listCol}>
           <p className={styles.label} data-mega-item>
-            [ SERVICES ]
+            SERVICES
           </p>
           <ul role="list" className={styles.list}>
             {services.map((s, i) => (

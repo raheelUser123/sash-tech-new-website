@@ -222,7 +222,7 @@ export function Header() {
             ))}
           </ul>
           <p className={styles.menuLabel} data-menu-item>
-            [ SERVICES ]
+            SERVICES
           </p>
           <ul role="list" className={styles.menuServices}>
             {services.map((s) => (

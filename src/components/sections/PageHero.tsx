@@ -11,7 +11,7 @@ type Props = {
   text: React.ReactNode;
   primary?: Action;
   secondary?: Action;
-  /** "[ SHOPIFY · SHOPIFY PLUS · … ]" line under the divider. */
+  /** "SHOPIFY · SHOPIFY PLUS · …" line under the divider. */
   tagline?: string;
   visual?: { src: string; width: number; height: number; className?: string; kind?: VisualKind };
   /** Extra content placed under the buttons (e.g. a partner badge). */
@@ -53,7 +53,7 @@ export function PageHero({ title, text, primary, secondary, tagline, visual, chi
         <div className={`container ${styles.bottom}`}>
           <span className={styles.rule} data-reveal="line" data-immediate data-delay="0.4" aria-hidden="true" />
           <p className={styles.tagline} data-reveal="fade" data-immediate data-delay="0.7">
-            [ {tagline} ]
+            {tagline}
           </p>
         </div>
       )}

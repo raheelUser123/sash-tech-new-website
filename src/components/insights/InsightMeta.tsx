@@ -5,11 +5,11 @@ export function InsightMeta({ article, className, author = false }: { article: I
   const mins = article.readingMinutes;
   return (
     <p className={className}>
-      {author && <span>[ AUTHOR {article.author.name} ]</span>}
+      {author && <span>AUTHOR {article.author.name}</span>}
       <span>
-        [ <time dateTime={article.date}>{formatInsightDate(article.date)}</time> ]
+        <time dateTime={article.date}>{formatInsightDate(article.date)}</time>
       </span>
-      <span>[ {mins} min{mins === 1 ? "" : "s"} Read Time ]</span>
+      <span>{mins} min{mins === 1 ? "" : "s"} Read Time</span>
     </p>
   );
 }

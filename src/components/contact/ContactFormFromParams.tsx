@@ -10,7 +10,7 @@ import { ContactForm } from "./ContactForm";
  */
 export function ContactFormFromParams() {
   const params = useSearchParams();
-  const kind = params.get("type") === "partner" ? "partner" : "project";
+  const kind = params.get("type") === "partner" ? "partner" : params.get("type") === "individual" ? "individual" : "project";
   const needs = (params.get("need") ?? "")
     .split(",")
     .map((s) => s.trim())

@@ -158,6 +158,7 @@ export async function POST(req: Request) {
       replyTo = data.email;
       title = partner ? "New agency partner enquiry" : "New project enquiry";
       rows = [
+        ["Enquiry as", data.kind === "individual" ? "Individual" : partner ? "Agency partner" : "Brand owner"],
         ["Name", data.name],
         ["Email", data.email],
         [partner ? "Agency" : "Company / brand", data.company],

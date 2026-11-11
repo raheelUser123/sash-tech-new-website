@@ -61,7 +61,7 @@ export function ContactForm({ initialKind = "project", initialNeeds = [], initia
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
-  const copy = COPY[kind];
+  const copy = COPY[kind === "individual" ? "project" : kind];
   // Where focus should go after the next render (set by submit; applied once the DOM is updated).
   const [focusReq, setFocusReq] = useState<{ to: "invalid" | "status" | "success"; n: number } | null>(null);
   const requestFocus = (to: "invalid" | "status" | "success") => setFocusReq((r) => ({ to, n: (r?.n ?? 0) + 1 }));
@@ -133,6 +133,7 @@ export function ContactForm({ initialKind = "project", initialNeeds = [], initia
     kind === "partner" ? "Agency partner enquiry" : "Project enquiry",
   )}&body=${encodeURIComponent(
     [
+      `Enquiry as: ${kind}`,
       `Name: ${values.name}`,
       values.company && `${copy.company}: ${values.company}`,
       values.website && `${copy.website}: ${values.website}`,
@@ -189,7 +190,8 @@ export function ContactForm({ initialKind = "project", initialNeeds = [], initia
           <div className={styles.segment}>
             {(
               [
-                ["project", "Brand / creator"],
+                ["project", "Brand owner"],
+                ["individual", "Individual"],
                 ["partner", "Agency partner"],
               ] as const
             ).map(([k, label]) => (
@@ -218,10 +220,10 @@ export function ContactForm({ initialKind = "project", initialNeeds = [], initia
           name="email"
           type="email"
           inputMode="email"
-          label="Work email"
+          label={kind === "individual" ? "Email" : "Work email"}
           required
           autoComplete="email"
-          placeholder={kind === "partner" ? "name@agency.com" : "name@company.com"}
+          placeholder={kind === "partner" ? "name@agency.com" : kind === "individual" ? "you@example.com" : "name@company.com"}
           value={values.email}
           error={errors.email}
           onChange={(e) => update("email", e.target.value)}
