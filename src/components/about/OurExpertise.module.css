@@ -1,0 +1,31 @@
+.section { padding-block:clamp(48px,6vw,112px); background:var(--paper); }
+.panel { position:relative; isolation:isolate; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); overflow:hidden; border:1px solid #b29bff25; border-radius:28px; background:radial-gradient(ellipse at 0 0,#34205b 0,transparent 58%),#100e1c; color:#fff; }
+.intro { position:relative; padding:clamp(28px,4vw,68px); display:flex; flex-direction:column; align-items:flex-start; }
+.eyebrow { display:flex; align-items:center; gap:10px; font-size:11px; letter-spacing:.12em; color:#c6b3f5; margin-bottom:32px; }
+.eyebrow>span { width:7px; height:7px; border-radius:50%; background:#b99aff; box-shadow:0 0 18px #b99aff80; }
+.intro h2 { font-family:var(--font-display); font-weight:500; font-size:clamp(2.4rem,3.5vw,4.6rem); line-height:1.06; letter-spacing:-.045em; max-width:11ch; }
+.intro h2 em { font-family:var(--font-serif); color:#bd9bff; font-weight:400; }
+.description { max-width:42ch; color:#c0bbd0; font-size:clamp(14px,1vw,17px); line-height:1.8; margin:26px 0 32px; }
+.signature { display:flex; flex-wrap:wrap; gap:14px; margin-top:auto; padding-top:48px; font-size:10px; letter-spacing:.16em; color:#9185ac; }
+.signature span+span::before { content:"/"; margin-right:14px; color:#5c496e; }
+.services { padding:20px clamp(24px,3vw,48px); border-left:1px solid #ffffff12; }
+.service { position:relative; display:grid; grid-template-columns:86px minmax(0,1fr) 20px; gap:22px; align-items:center; padding:30px 0; border-bottom:1px solid #ffffff18; text-decoration:none; }
+.service:last-child { border-bottom:0; }
+.artwork { display:grid; place-items:center; width:86px; aspect-ratio:1; border-radius:22px; background:linear-gradient(140deg,#c7a1ff15,#7954f705); border:1px solid #c4a3ff20; transition:background .35s,transform .45s; }
+.art { width:70px; height:70px; stroke:#bfa1f8; stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round; transition:transform .5s,color .4s; }
+.category { display:block; color:#a38acb; font-size:9px; letter-spacing:.14em; margin-bottom:10px; }
+.details h3 { font-family:var(--font-display); font-size:clamp(1.2rem,1.65vw,1.85rem); font-weight:500; letter-spacing:-.025em; line-height:1.2; }
+.details p { font-size:13px; line-height:1.7; color:#b7b1c6; max-width:43ch; margin-top:10px; }
+.tags { display:block; color:#8d809e; font-size:8px; letter-spacing:.09em; line-height:1.8; margin-top:14px; }
+.arrow { align-self:start; margin-top:8px; color:#ae91db; font-size:23px; transition:translate .3s,color .3s; }
+.service:hover .artwork,.service:focus-visible .artwork { background:#a279f728; transform:rotate(-5deg); }
+.service:hover .art,.service:focus-visible .art { transform:rotate(8deg) scale(1.05); }
+.service:hover .arrow { translate:3px -3px; color:#fff; }
+.service:focus-visible { outline:2px solid #bd9bff; outline-offset:6px; border-radius:4px; }
+.footer { grid-column:1/-1; display:flex; align-items:center; gap:24px; padding:22px clamp(28px,4vw,68px); border-top:1px solid #ffffff16; background:#ffffff03; }
+.footerLabel { color:#a78fc9; font-size:9px; letter-spacing:.12em; }
+.footer p { color:#bcb4ca; font-size:12px; }
+.footerMark { margin-left:auto; font-size:28px; line-height:1; color:#bf9bff; }
+@media(max-width:1000px) { .panel { grid-template-columns:1fr; } .intro h2 { max-width:15ch; } .signature { padding-top:30px; } .services { border-left:0; border-top:1px solid #ffffff12; margin-inline:28px; padding:0; } .intro { padding:36px; } }
+@media(max-width:540px) { .panel { border-radius:20px; } .intro { padding:28px 24px; } .eyebrow { margin-bottom:24px; } .service { grid-template-columns:56px minmax(0,1fr) 16px; gap:14px; padding-block:26px; align-items:start; } .services { margin-inline:24px; } .artwork { width:56px; border-radius:15px; } .art { width:46px; height:46px; } .details p { font-size:12px; } .tags { font-size:7px; } .footer { flex-wrap:wrap; gap:10px; padding:22px 24px; } .footer p { flex-basis:100%; order:3; } }
+@media(prefers-reduced-motion:reduce) { .artwork,.art,.arrow { transition:none; } }

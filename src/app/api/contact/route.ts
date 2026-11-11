@@ -1,6 +1,5 @@
 import { after } from "next/server";
 import nodemailer from "nodemailer";
-import { crmConfig, sendCrmLead } from "@/lib/crm";
 import { site } from "@/lib/site";
 import {
   HONEYPOT_FIELD,
@@ -12,11 +11,8 @@ import {
   type ApiResponse,
 } from "@/components/contact/validation";
 
-/**
- * Validates all website forms and saves leads to CRM before acknowledging success.
- * SMTP notifications are optional, sent after the response (so a slow mail server never
- * delays the visitor) and cannot turn a saved lead into a failed submission.
- * Route handlers run on Node.js by default; a `runtime` export is not allowed with Cache Components.
+/** Validates website forms and sends submissions through SMTP before acknowledging success.
+ * Customer acknowledgements use a separate branded template after admin delivery.
  */
 
 const RATE_LIMIT = 5;
@@ -53,7 +49,7 @@ function renderEmail(title: string, rows: Row[]) {
   const filled = rows.filter(([, v]) => v);
   const html = `<!doctype html><html><body style="margin:0;padding:24px;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;color:#0b0b0c">
 <table role="presentation" width="100%" style="max-width:640px;margin:0 auto;background:#fff;border-radius:16px;padding:28px" cellpadding="0" cellspacing="0">
-<tr><td style="padding-bottom:16px;font-size:20px;font-weight:bold;border-bottom:2px solid #ea2229">${escapeHtml(title)}</td></tr>
+<tr><td style="padding-bottom:16px;font-size:20px;font-weight:bold;border-bottom:2px solid #7954f7">${escapeHtml(title)}</td></tr>
 ${filled
   .map(
     ([k, v]) =>
@@ -65,6 +61,21 @@ ${filled
 </table></body></html>`;
   const text = `${title}\n\n${filled.map(([k, v]) => `${k}:\n${v}`).join("\n\n")}\n`;
   return { html, text };
+}
+
+
+function renderThankYou(type: "contact" | "meeting" | "newsletter", name: string) {
+  const heading = type === "newsletter" ? "You're on the list!" : type === "meeting" ? "We've received your meeting request." : "Thank you for reaching out!";
+  const message = type === "newsletter"
+    ? "Thanks for subscribing. Look out for creative ideas, practical insights and updates from our team."
+    : type === "meeting"
+      ? "Our team will review your requested time and reply within one business day with confirmation and a meeting link. Your meeting is pending confirmation."
+      : "Your enquiry has reached our team. We'll review your project and reply within one business day to discuss the next steps.";
+  const greeting = name ? `Hi ${name},` : "Hello,";
+  const subject = type === "newsletter" ? `Welcome to ${site.name}` : `Thank you for contacting ${site.name}`;
+  const text = `${greeting}\n\n${heading}\n\n${message}\n\nYou can reply to this email if you have anything to add.\n\n${site.name}\n${site.email}`;
+  const html = `<!doctype html><html><body style="margin:0;padding:32px 16px;background:#f0edf8;font-family:Arial,Helvetica,sans-serif;color:#171222"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden"><tr><td style="background:#0b091b;padding:28px 32px;color:#c6acff;font-size:18px;font-weight:bold">${escapeHtml(site.name)}</td></tr><tr><td style="padding:32px"><p>${escapeHtml(greeting)}</p><h1 style="font-size:28px;line-height:1.2;color:#7954f7">${escapeHtml(heading)}</h1><p style="font-size:16px;line-height:1.7">${escapeHtml(message)}</p><p style="font-size:15px;line-height:1.7;color:#625b70">You can reply to this email if you have anything to add.</p><p style="margin-top:28px;font-weight:bold">The ${escapeHtml(site.name)} team</p></td></tr><tr><td style="padding:20px 32px;background:#f7f5fc;font-size:13px;color:#625b70">${escapeHtml(site.name)} &middot; ${escapeHtml(site.email)}</td></tr></table></body></html>`;
+  return { subject, html, text };
 }
 
 function formatInZone(instant: number, timeZone: string) {
@@ -84,11 +95,10 @@ function smtpConfig() {
   };
 }
 
-async function sendEmail(mail: { subject: string; replyTo: string; html: string; text: string }) {
+async function sendEmail(mail: { subject: string; replyTo: string; html: string; text: string; to?: string }) {
   const { host, user, password, port } = smtpConfig();
   if (!host || !user || !password || !Number.isInteger(port) || port < 1 || port > 65535) {
-    console.error("[api/contact] SMTP notification skipped: missing or invalid SMTP configuration");
-    return;
+    throw new Error("Missing or invalid SMTP configuration");
   }
 
   const transporter = nodemailer.createTransport({
@@ -103,7 +113,7 @@ async function sendEmail(mail: { subject: string; replyTo: string; html: string;
   });
   const result = await transporter.sendMail({
     from: process.env.CONTACT_FROM_EMAIL?.trim() || { name: site.name, address: user },
-    to: (process.env.ADMIN_EMAIL || process.env.CONTACT_TO_EMAIL || site.email)
+    to: (mail.to || process.env.ADMIN_EMAIL || process.env.CONTACT_TO_EMAIL || site.email)
       .split(",")
       .map((address) => address.trim())
       .filter(Boolean),
@@ -115,7 +125,7 @@ async function sendEmail(mail: { subject: string; replyTo: string; html: string;
     disableUrlAccess: true,
   });
   if (!result.accepted.length || result.rejected.length) {
-    console.error("[api/contact] SMTP notification was not accepted by all recipients");
+    throw new Error("SMTP message was not accepted by all recipients");
   }
 }
 
@@ -139,8 +149,6 @@ export async function POST(req: Request) {
     return json({ ok: false, message: "Too many requests. Please wait a minute and try again." }, 429);
   }
 
-  let crmForm: "contact" | "partner" | "schedule" | "newsletter";
-  let crmFields: Record<string, unknown>;
   let subject: string;
   let replyTo: string;
   let title: string;
@@ -152,8 +160,6 @@ export async function POST(req: Request) {
       const { data, errors } = validateContact(body);
       if (Object.keys(errors).length) return json({ ok: false, message: "Please check the highlighted fields.", errors }, 422);
       const partner = data.kind === "partner";
-      crmForm = partner ? "partner" : "contact";
-      crmFields = { ...data, website: normalizeUrl(data.website) || "" };
       subject = oneLine(`${partner ? "Partner enquiry" : "New enquiry"}: ${data.name}${data.company ? ` (${data.company})` : ""}`);
       replyTo = data.email;
       title = partner ? "New agency partner enquiry" : "New project enquiry";
@@ -173,8 +179,6 @@ export async function POST(req: Request) {
     case "meeting": {
       const { data, errors } = validateMeeting(body);
       if (Object.keys(errors).length) return json({ ok: false, message: errors.datetime ?? "Please check the highlighted fields.", errors }, 422);
-      crmForm = "schedule";
-      crmFields = { ...data, storeUrl: normalizeUrl(data.storeUrl) || "" };
       const instant = Date.parse(data.datetime);
       const office = formatInZone(instant, OFFICE_TIME_ZONE);
       subject = oneLine(`Meeting request: ${data.name}, ${office}`);
@@ -195,8 +199,6 @@ export async function POST(req: Request) {
     case "newsletter": {
       const { data, errors } = validateNewsletter(body);
       if (Object.keys(errors).length) return json({ ok: false, message: errors.email, errors }, 422);
-      crmForm = "newsletter";
-      crmFields = { ...data };
       subject = oneLine(`Newsletter signup: ${data.email}`);
       replyTo = data.email;
       title = "New newsletter signup";
@@ -212,22 +214,24 @@ export async function POST(req: Request) {
       return json({ ok: false, message: "Unknown form type." }, 400);
   }
 
-  if (!crmConfig().configured) {
-    console.error("[api/contact] CRM_BASE_URL and/or CRM_SITE_API_KEY are not set on the server");
+  const smtp = smtpConfig();
+  if (!smtp.host || !smtp.user || !smtp.password || !Number.isInteger(smtp.port) || smtp.port < 1 || smtp.port > 65535) {
     return json({ ok: false, code: "not_configured", message: UNAVAILABLE }, 503);
   }
-
-  const saved = await sendCrmLead(crmForm, crmFields, req);
-  if (!saved) {
-    return json({ ok: false, message: `We couldn't save your submission just now. Please try again or email us at ${site.email}.` }, 502);
-  }
-
   const { html, text } = renderEmail(title, rows);
+  try {
+    await sendEmail({ subject, replyTo, html, text });
+  } catch {
+    console.error("[api/contact] SMTP submission delivery failed");
+    return json({ ok: false, message: `We couldn't send your submission just now. Please try again or email us at ${site.email}.` }, 502);
+  }
+  const acknowledgement = renderThankYou(body.type as "contact" | "meeting" | "newsletter", rows.find(([label]) => label === "Name")?.[1] || "");
   after(async () => {
     try {
-      await sendEmail({ subject, replyTo, html, text });
-    } catch (error) {
-      console.error("[api/contact] SMTP notification failed; lead remains saved in CRM:", error instanceof Error ? error.message : error);
+      await sendEmail({ ...acknowledgement, to: replyTo, replyTo: site.email });
+    } catch {
+      // Admin already has the submission; do not ask the visitor to send it again.
+      console.error("[api/contact] Customer acknowledgement delivery failed");
     }
   });
   return json({ ok: true, message: success });
@@ -238,11 +242,10 @@ export async function POST(req: Request) {
  * (true/false only, never the values).
  */
 export function GET() {
-  const crm = crmConfig();
   const smtp = smtpConfig();
   return Response.json(
     {
-      crm: { baseUrl: crm.baseUrlValid, apiKey: crm.apiKeyValid },
+
       smtp: { host: !!smtp.host, port: Number.isInteger(smtp.port) && smtp.port > 0 && smtp.port < 65536, user: !!smtp.user, password: !!smtp.password },
       adminEmail: !!(process.env.ADMIN_EMAIL || process.env.CONTACT_TO_EMAIL),
     },
