@@ -60,6 +60,10 @@ export function Footer() {
               <a href={`mailto:${site.email}`} className={styles.link}>
                 {site.email}
               </a>
+              <br />
+              <a href={site.phoneHref} className={styles.link}>
+                {site.phone}
+              </a>
             </address>
           </div>
         </div>

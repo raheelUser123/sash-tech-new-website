@@ -28,6 +28,7 @@ const contactPageJsonLd = {
     "@type": "ProfessionalService",
     name: site.name,
     email: site.email,
+    telephone: site.phone,
     address: {
       "@type": "PostalAddress",
       streetAddress: site.address.street,
@@ -39,6 +40,7 @@ const contactPageJsonLd = {
       "@type": "ContactPoint",
       contactType: "sales",
       email: site.email,
+    telephone: site.phone,
       availableLanguage: ["English", "Urdu"],
       areaServed: ["US", "GB", "AE", "SA", "PK"],
     },
@@ -73,6 +75,9 @@ export default function ContactPage() {
                 <span className="sr-only"> (opens Google Maps in a new tab)</span>
               </a>
               <div className={styles.contactLinks}>
+                <a className={styles.mailLink} href={site.phoneHref}>
+                  {site.phone}
+                </a>
                 <a className={styles.mailLink} href={`mailto:${site.email}`}>
                   {site.email}
                 </a>
@@ -83,7 +88,7 @@ export default function ContactPage() {
               <h2 id="promo-title" className={styles.promoTitle}>
                 Prefer a conversation?
               </h2>
-              <p className={styles.promoText}>Email us directly to discuss your project.</p>
+              <p className={styles.promoText}>Call or email us directly to discuss your project.</p>
               <div className={styles.promoAction}>
                 <Button href={`mailto:${site.email}`} variant="dark">
                   Email our team

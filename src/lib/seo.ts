@@ -44,6 +44,7 @@ export const organizationJsonLd = {
   image: `${site.url}/images/sashtech/hero-image.webp`,
   description: site.description,
   email: site.email,
+  telephone: site.phone,
   address: {
     "@type": "PostalAddress",
     streetAddress: site.address.street,

@@ -42,6 +42,8 @@ export function Location() {
               Office-403, AG Trade Center,
               <br /> Block 14 Gulistan-e-Johar,
               <br /> {site.address.city}, {site.address.postalCode}
+              <br />
+              <a href={site.phoneHref}>{site.phone}</a>
             </address>
             <ul role="list" className={styles.markets} aria-label="Markets we serve" data-reveal-stagger="0.06">
               {site.markets.map((m) => (
