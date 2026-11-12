@@ -7,6 +7,7 @@ export const site = {
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "info@sashtech.digital",
   phone: "+1 (385) 885-7732",
   phoneHref: "tel:+13858857732",
+  whatsappUrl: "https://web.whatsapp.com/send?phone=13858857732",
   locale: "en_US",
   social: {
     instagram: "https://www.instagram.com/sashtech.digital/",

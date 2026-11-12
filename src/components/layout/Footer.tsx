@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { WhatsAppIcon, LocationIcon } from "@/components/ui/ContactIcons";
 import { companyNav, legalNav, services, site } from "@/lib/site";
 import { Logo } from "@/components/ui/Logo";
 import { SocialLinks } from "./SocialLinks";
@@ -53,15 +54,18 @@ export function Footer() {
           <div className={styles.col}>
             <h2 className={styles.colTitle}>Office</h2>
             <address className={styles.address}>
+              <span className={styles.addressRow}><LocationIcon /><span>
               {site.address.street},
               <br />
               {site.address.city}, {site.address.postalCode}
+              </span></span>
               <br />
               <a href={`mailto:${site.email}`} className={styles.link}>
                 {site.email}
               </a>
               <br />
-              <a href={site.phoneHref} className={styles.link}>
+              <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" className={`${styles.link} ${styles.phone}`} aria-label={`Chat on WhatsApp: ${site.phone} (opens in a new tab)`}>
+                <WhatsAppIcon />
                 {site.phone}
               </a>
             </address>

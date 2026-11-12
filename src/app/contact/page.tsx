@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { WhatsAppIcon, LocationIcon } from "@/components/ui/ContactIcons";
 import { JsonLd } from "@/components/JsonLd";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactFormFromParams } from "@/components/contact/ContactFormFromParams";
@@ -40,7 +41,7 @@ const contactPageJsonLd = {
       "@type": "ContactPoint",
       contactType: "sales",
       email: site.email,
-    telephone: site.phone,
+      telephone: site.phone,
       availableLanguage: ["English", "Urdu"],
       areaServed: ["US", "GB", "AE", "SA", "PK"],
     },
@@ -66,16 +67,17 @@ export default function ContactPage() {
             </p>
             <div data-reveal data-immediate data-delay="0.5">
               <address className={styles.address}>
-                {site.address.street},
+                <LocationIcon /><span>{site.address.street},
                 <br />
-                {site.address.city}, {site.address.postalCode}
+                {site.address.city}, {site.address.postalCode}</span>
               </address>
               <a className={styles.directions} href={directionsUrl} target="_blank" rel="noopener noreferrer">
                 Get directions <span aria-hidden="true">↗</span>
                 <span className="sr-only"> (opens Google Maps in a new tab)</span>
               </a>
               <div className={styles.contactLinks}>
-                <a className={styles.mailLink} href={site.phoneHref}>
+                <a className={`${styles.mailLink} ${styles.phone}`} href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp: ${site.phone} (opens in a new tab)`}>
+                  <WhatsAppIcon />
                   {site.phone}
                 </a>
                 <a className={styles.mailLink} href={`mailto:${site.email}`}>

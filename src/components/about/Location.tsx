@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { WhatsAppIcon, LocationIcon } from "@/components/ui/ContactIcons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { site } from "@/lib/site";
 import styles from "./Location.module.css";
@@ -39,11 +40,12 @@ export function Location() {
           <div className={`${styles.card} theme-dark`} data-reveal data-delay="0.1">
             <p className={styles.label}>VISIT US</p>
             <address className={styles.address}>
-              Office-403, AG Trade Center,
+              <span className={styles.addressRow}><LocationIcon /><span>Office-403, AG Trade Center,
               <br /> Block 14 Gulistan-e-Johar,
               <br /> {site.address.city}, {site.address.postalCode}
               <br />
-              <a href={site.phoneHref}>{site.phone}</a>
+              </span></span>
+              <a className={styles.phone} href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp: ${site.phone} (opens in a new tab)`}><WhatsAppIcon />{site.phone}</a>
             </address>
             <ul role="list" className={styles.markets} aria-label="Markets we serve" data-reveal-stagger="0.06">
               {site.markets.map((m) => (

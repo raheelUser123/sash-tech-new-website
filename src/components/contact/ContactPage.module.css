@@ -264,3 +264,4 @@
 .directions:focus-visible {
   color: var(--red);
 }
+.address { display:flex;align-items:flex-start;gap:10px; }.address>svg { margin-top:4px;color:var(--red); }.phone { display:inline-flex;align-items:center;gap:10px; }.phone>svg { color:#25d366; }

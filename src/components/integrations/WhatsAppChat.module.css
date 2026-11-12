@@ -1,0 +1,8 @@
+.button { position:fixed;left:max(24px,env(safe-area-inset-left));bottom:calc(24px + env(safe-area-inset-bottom));z-index:100;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#25d366;color:#fff;box-shadow:0 6px 24px #0004;isolation:isolate;transition:background .2s,transform .2s; }
+.button svg { width:30px;height:30px; }
+.button::before { content:"";position:absolute;inset:0;border-radius:inherit;background:#25d366;z-index:-1;animation:pulse 2.2s ease-out infinite; }
+.button:hover { background:#128c4e;transform:translateY(-3px); }
+.button:focus-visible { outline:3px solid #fff;outline-offset:5px; }
+@keyframes pulse { 0% { transform:scale(1);opacity:.55; } 85%,100% { transform:scale(1.65);opacity:0; } }
+@media(max-width:650px) { .button { left:max(18px,env(safe-area-inset-left));bottom:calc(18px + env(safe-area-inset-bottom));width:54px;height:54px; } }
+@media(prefers-reduced-motion:reduce) { .button { transition:none; }.button::before { animation:none; } }

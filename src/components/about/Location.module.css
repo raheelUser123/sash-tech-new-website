@@ -166,3 +166,5 @@
     min-height: clamp(380px, 26.25vw, 504px);
   }
 }
+
+.addressRow { display:flex;align-items:flex-start;gap:10px; }.addressRow>svg { margin-top:4px;color:var(--red); }.phone { display:inline-flex;align-items:center;gap:10px;margin-top:12px; }.phone>svg { color:#25d366; }

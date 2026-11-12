@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { Cursor } from "@/components/motion/Cursor";
+import { WhatsAppChat } from "@/components/integrations/WhatsAppChat";
 import { LiveChat } from "@/components/integrations/LiveChat";
 import { Preloader } from "@/components/motion/Preloader";
 import { JsonLd } from "@/components/JsonLd";
@@ -85,6 +86,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </SmoothScroll>
         <JsonLd data={organizationJsonLd} />
         <LiveChat />
+        <WhatsAppChat />
       </body>
     </html>
   );

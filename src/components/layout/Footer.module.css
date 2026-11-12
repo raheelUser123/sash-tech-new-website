@@ -146,3 +146,5 @@
 .socialIcon:focus-visible { outline:2px solid #c9aaff;outline-offset:4px; }
 .socialPending { opacity:.5; }
 @media(prefers-reduced-motion:reduce) { .socialIcon { transition:none; } }
+
+.addressRow { display:flex;align-items:flex-start;gap:10px; }.addressRow>svg { margin-top:3px;color:var(--red); }.address .phone { display:inline-flex;align-items:center;gap:10px; }.phone>svg { color:#25d366; }
