@@ -1,5 +1,8 @@
 "use client";
 
+import { FormCaptcha } from "@/components/contact/FormCaptcha";
+import { submitContact } from "@/components/contact/validation";
+
 import { useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import styles from "./Newsletter.module.css";
@@ -35,12 +38,8 @@ export function NewsletterForm() {
     }
     setStatus({ kind: "sending" });
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "newsletter", email: email.trim() }),
-      });
-      const data = (await res.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
+      const res = await submitContact({ type: "newsletter", email: email.trim() }, e.currentTarget);
+      const data = res;
       if (res.ok && data?.ok !== false) {
         setStatus({ kind: "success", message: data?.message || "Thanks for subscribing. New articles will arrive in your inbox." });
         setEmail("");
@@ -96,6 +95,7 @@ export function NewsletterForm() {
           {status.kind === "sending" ? "Subscribing…" : "Subscribe"}
         </Button>
       </div>
+      <FormCaptcha />
       {fieldError && (
         <p id={errorId} className={styles.error}>
           {fieldError}

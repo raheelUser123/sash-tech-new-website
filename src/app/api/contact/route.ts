@@ -1,6 +1,7 @@
 import { after } from "next/server";
 import nodemailer from "nodemailer";
 import { site } from "@/lib/site";
+import { rateLimited, validOrigin, readFormBody, verifyCaptcha, reserveDelivery, releaseDelivery, reserveMailAttempt } from "@/lib/form-security";
 import {
   HONEYPOT_FIELD,
   OFFICE_TIME_ZONE,
@@ -14,21 +15,6 @@ import {
 /** Validates website forms and sends submissions through SMTP before acknowledging success.
  * Customer acknowledgements use a separate branded template after admin delivery.
  */
-
-const RATE_LIMIT = 5;
-const RATE_WINDOW_MS = 60_000;
-const hits = new Map<string, number[]>();
-
-function rateLimited(ip: string, now = Date.now()) {
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  // Keep the map from growing without bound on a long-lived server.
-  if (hits.size > 5000) {
-    for (const [key, times] of hits) if (times.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(key);
-  }
-  return recent.length > RATE_LIMIT;
-}
 
 function clientIp(req: Request) {
   const fwd = req.headers.get("x-forwarded-for");
@@ -101,6 +87,8 @@ async function sendEmail(mail: { subject: string; replyTo: string; html: string;
     throw new Error("Missing or invalid SMTP configuration");
   }
 
+  if (!reserveMailAttempt()) throw new Error("Hourly email safety cap reached");
+
   const transporter = nodemailer.createTransport({
     host,
     port,
@@ -132,22 +120,22 @@ async function sendEmail(mail: { subject: string; replyTo: string; html: string;
 const UNAVAILABLE = `Our form isn't connected right now. Please email us at ${site.email} and we'll reply within one business day.`;
 
 export async function POST(req: Request) {
+  if (!validOrigin(req)) return json({ ok: false, message: "Request origin not allowed." }, 403);
+  if (req.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") return json({ ok: false, message: "JSON required." }, 415);
+  if (rateLimited(clientIp(req))) return json({ ok: false, message: "Too many requests. Please try again later." }, 429);
   let body: Record<string, unknown>;
   try {
-    const parsed: unknown = await req.json();
+    const parsed: unknown = await readFormBody(req);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("not an object");
     body = parsed as Record<string, unknown>;
-  } catch {
-    return json({ ok: false, message: "Invalid request." }, 400);
+  } catch (error) {
+    return json({ ok: false, message: "Invalid request." }, error instanceof RangeError ? 413 : 400);
   }
 
   // Honeypot: pretend everything worked so bots learn nothing.
   const trap = body[HONEYPOT_FIELD];
   if (typeof trap === "string" && trap.trim() !== "") return json({ ok: true, message: "Thanks, we'll be in touch." });
 
-  if (rateLimited(clientIp(req))) {
-    return json({ ok: false, message: "Too many requests. Please wait a minute and try again." }, 429);
-  }
 
   let subject: string;
   let replyTo: string;
@@ -214,19 +202,26 @@ export async function POST(req: Request) {
       return json({ ok: false, message: "Unknown form type." }, 400);
   }
 
+  const captcha = await verifyCaptcha(body.captchaToken);
+  if (captcha === "unavailable") return json({ ok: false, message: "Security check unavailable. Please contact us directly." }, 503);
+  if (captcha !== "ok") return json({ ok: false, message: "Please complete a new security check and try again." }, 403);
+
   const smtp = smtpConfig();
   if (!smtp.host || !smtp.user || !smtp.password || !Number.isInteger(smtp.port) || smtp.port < 1 || smtp.port > 65535) {
     return json({ ok: false, code: "not_configured", message: UNAVAILABLE }, 503);
   }
   const { html, text } = renderEmail(title, rows);
+  if (!reserveDelivery(replyTo, text)) return json({ ok: false, message: "This submission was already received. Please wait before sending it again." }, 429);
   try {
     await sendEmail({ subject, replyTo, html, text });
   } catch {
+    releaseDelivery(replyTo, text);
     console.error("[api/contact] SMTP submission delivery failed");
     return json({ ok: false, message: `We couldn't send your submission just now. Please try again or email us at ${site.email}.` }, 502);
   }
   const acknowledgement = renderThankYou(body.type as "contact" | "meeting" | "newsletter", rows.find(([label]) => label === "Name")?.[1] || "");
-  after(async () => {
+  // Off by default: never let public forms become an automatic email relay.
+  if (process.env.CONTACT_SEND_ACKNOWLEDGEMENTS === "true") after(async () => {
     try {
       await sendEmail({ ...acknowledgement, to: replyTo, replyTo: site.email });
     } catch {
@@ -248,6 +243,7 @@ export function GET() {
 
       smtp: { host: !!smtp.host, port: Number.isInteger(smtp.port) && smtp.port > 0 && smtp.port < 65536, user: !!smtp.user, password: !!smtp.password },
       adminEmail: !!(process.env.ADMIN_EMAIL || process.env.CONTACT_TO_EMAIL),
+      captcha: { siteKey: !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim(), secretKey: !!process.env.TURNSTILE_SECRET_KEY?.trim() },
     },
     { headers: { "Cache-Control": "no-store" } },
   );

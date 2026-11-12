@@ -197,12 +197,16 @@ export function validateNewsletter(input: Input): { data: NewsletterPayload; err
  */
 export async function submitContact(
   body: { type: ContactRequestType } & Record<string, unknown>,
+  form: HTMLFormElement,
 ): Promise<ApiResponse & { status: number }> {
+  const token = new FormData(form).get("cf-turnstile-response");
+  if (typeof token !== "string" || !token) return { ok: false, status: 400, message: "Please complete the security check before sending." };
   try {
     const res = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ ...body, captchaToken: token }),
+      signal: AbortSignal.timeout(30_000),
     });
     const json = (await res.json().catch(() => ({}))) as ApiResponse;
     const ok = res.ok && json.ok !== false;
@@ -213,5 +217,7 @@ export async function submitContact(
     return { ok, message, errors: json.errors, status };
   } catch {
     return { ok: false, status: 0, message: "We couldn't reach the server. Please check your connection and try again." };
+  } finally {
+    form.dispatchEvent(new Event("captcha-reset"));
   }
 }

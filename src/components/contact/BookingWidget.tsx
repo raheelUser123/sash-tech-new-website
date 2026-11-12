@@ -1,5 +1,7 @@
 "use client";
 
+import { FormCaptcha } from "./FormCaptcha";
+
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEvent, type KeyboardEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { gsap, prefersReducedMotion, useGSAP } from "@/components/motion/gsap";
@@ -225,7 +227,7 @@ export function BookingWidget({ bookingUrl }: { bookingUrl?: string }) {
     }
     setStatus("sending");
     setMessage("");
-    const res = await submitContact({ type: "meeting", ...details, datetime: iso, timeZone: zone.id, botcheck: trap });
+    const res = await submitContact({ type: "meeting", ...details, datetime: iso, timeZone: zone.id, botcheck: trap }, e.currentTarget as HTMLFormElement);
     if (res.ok) {
       setStatus("success");
       setMessage(res.message ?? "");
@@ -486,7 +488,8 @@ export function BookingWidget({ bookingUrl }: { bookingUrl?: string }) {
             error={errors.notes || undefined}
             onChange={(e) => updateDetail("notes", e.target.value)}
           />
-          <Honeypot value={trap} onChange={setTrap} />
+          <FormCaptcha />
+        <Honeypot value={trap} onChange={setTrap} />
 
           {(status === "error" || status === "unavailable") && (
             <div

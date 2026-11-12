@@ -1,5 +1,7 @@
 "use client";
 
+import { FormCaptcha } from "@/components/contact/FormCaptcha";
+
 import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -41,7 +43,7 @@ export function PartnerForm() {
       message: get("requirements"),
       consent: d.get("consent") === "on",
       [HONEYPOT_FIELD]: get(HONEYPOT_FIELD),
-    });
+    }, form);
     if (res.ok) {
       form.reset();
       setStatus({ state: "sent", message: "Thanks! We'll review the details and reply within one business day." });
@@ -116,6 +118,7 @@ export function PartnerForm() {
         </span>
       </label>
 
+      <FormCaptcha />
       {/* Honeypot: hidden from people, tempting to bots */}
       <div className={styles.hp} aria-hidden="true">
         <label htmlFor={`${id}-hp`}>Leave this empty</label>

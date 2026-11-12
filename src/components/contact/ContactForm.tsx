@@ -1,5 +1,7 @@
 "use client";
 
+import { FormCaptcha } from "./FormCaptcha";
+
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/lib/site";
@@ -111,7 +113,7 @@ export function ContactForm({ initialKind = "project", initialNeeds = [], initia
     }
     setStatus("sending");
     setMessage("");
-    const res = await submitContact({ type: "contact", kind, ...values, botcheck: trap });
+    const res = await submitContact({ type: "contact", kind, ...values, botcheck: trap }, e.currentTarget as HTMLFormElement);
     if (res.ok) {
       setStatus("success");
       setMessage(res.message ?? "");
@@ -330,6 +332,7 @@ export function ContactForm({ initialKind = "project", initialNeeds = [], initia
           )}
         </div>
 
+        <FormCaptcha />
         <Honeypot value={trap} onChange={setTrap} />
 
         {(status === "error" || status === "unavailable") && (
