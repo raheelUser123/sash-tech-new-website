@@ -45,19 +45,19 @@ function PortfolioViewer({ items, index, onChange, onClose }: { items: Portfolio
   </dialog>;
 }
 
-export function PortfolioGrid({ items, layout = "standard" }: { items: PortfolioItem[]; layout?: "standard" | "landscape" | "mixed" }) {
+export function PortfolioGrid({ items, layout = "standard" }: { items: PortfolioItem[]; layout?: "standard" | "landscape" | "mixed" | "showcase" }) {
   const [selected, setSelected] = useState<number | null>(null);
   return <>
     <div className={[styles.grid, layout !== "standard" ? styles[layout] : undefined].filter(Boolean).join(" ")} data-items={items.length}>
       {items.map((item,i)=><article key={item.id} className={styles.card} data-kind={item.kind}>
-        {item.kind==="web" ? <div className={styles.browser} style={{"--web-duration":Math.min(20,Math.max(8,item.height/item.width*2.5))+"s"} as React.CSSProperties}>
+        {item.kind==="web" && layout!=="showcase" ? <div className={styles.browser} style={{"--web-duration":Math.min(20,Math.max(8,item.height/item.width*2.5))+"s"} as React.CSSProperties}>
           <div className={styles.browserBar}><span className={styles.browserDots}><i/><i/><i/></span><span>DESIGN / {String(i+1).padStart(2,"0")}</span><button type="button" onClick={()=>setSelected(i)} aria-label={"Expand "+item.title}><ExpandIcon/></button></div>
           <div className={styles.webViewport} tabIndex={0} role="region" aria-label={item.title+" full-page preview. Hover to scroll, or scroll inside on touch screens."} data-lenis-prevent>
             <Image src={item.src} alt={item.title+" full website layout"} width={item.width} height={item.height} quality={85} sizes="(min-width: 1100px) 30vw, (min-width: 650px) 45vw, 90vw" className={styles.webImage}/>
           </div><span className={styles.webHint}><span className={styles.hoverHint}>Hover to explore the page</span><span className={styles.touchHint}>Swipe inside to explore</span><span aria-hidden="true">↓</span></span>
         </div> : <div className={styles.media}>
           <button type="button" className={styles.mediaButton} onClick={()=>setSelected(i)} aria-label={(item.medium==="video"||item.medium==="gif"?"Play ":"View ")+item.title}>
-            <Image src={item.poster ?? item.src} alt={item.title} fill sizes="(min-width: 1100px) 30vw, (min-width: 650px) 45vw, 90vw" className={styles.art}/>
+            <Image src={item.poster ?? item.src} alt={item.title} fill sizes={layout==="showcase"?"(min-width: 650px) 50vw, 100vw":"(min-width: 1100px) 30vw, (min-width: 650px) 45vw, 90vw"} className={styles.art}/>
             {item.medium!=="image"&&<span className={styles.play} aria-hidden="true">▶</span>}
             <span className={styles.expand}><ExpandIcon/></span>
           </button>

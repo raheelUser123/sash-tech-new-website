@@ -1,8 +1,27 @@
 import { Marquee } from "@/components/sections/Marquee";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
-import { CreativeGallery } from "@/components/work/CreativeGallery";
+import { PortfolioGrid } from "@/components/work/PortfolioGrid";
+import { projects } from "@/content/work";
+import type { PortfolioItem } from "@/content/portfolio";
 import styles from "./FeaturedWork.module.css";
+
+const websites: PortfolioItem[] = projects.map(project => ({
+  id: project.slug,
+  title: project.name,
+  src: project.image,
+  ...project.imageSize,
+  kind: "web",
+  medium: "image",
+}));
+
+const branding: PortfolioItem[] = [
+  { id: "rival-brand", title: "Rival brand identity", src: "/images/sashtech/branding/branding1.webp", width: 2048, height: 1536, kind: "logo", medium: "image" },
+  { id: "seto-brand", title: "Seto visual identity", src: "/images/sashtech/branding/branding2.webp", width: 2048, height: 1536, kind: "logo", medium: "image" },
+  { id: "cultt-brand", title: "Cultt brand identity", src: "/images/sashtech/branding/branding3.webp", width: 1600, height: 1200, kind: "logo", medium: "image" },
+];
+
+const showcase = websites.flatMap((website, index) => [website, branding[index]]);
 
 export function FeaturedWork() {
   return (
@@ -20,7 +39,7 @@ export function FeaturedWork() {
                 Creative work. Real <em>impact.</em>
               </span>
             }
-            text={<p>Explore websites, visual identities and creative projects from Sash Tech Digital.</p>}
+            text={<p>Explore websites and brand identities from Sash Tech Digital.</p>}
             aside={
               <Button href="/portfolio" variant="outline-light">
                 All projects
@@ -28,7 +47,7 @@ export function FeaturedWork() {
             }
           />
 
-          <CreativeGallery limit={6} />
+          <PortfolioGrid items={showcase} layout="showcase" />
         </div>
       </div>
     </section>

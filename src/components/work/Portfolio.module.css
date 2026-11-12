@@ -36,3 +36,11 @@
 @media(max-width:650px) { .grid,.grid[data-items="2"] { grid-template-columns:1fr;gap:32px;--web-height:420px; }.chapter { padding-block:65px; }.chapterHeading { margin:27px 0 30px; }.chapterHeading h2 { font-size:clamp(38px,10.5vw,58px); }.chapterHeading>p { font-size:13px; }.chapterMeta { font-size:8px;gap:15px; }.collectionBar { margin-bottom:24px; }.filters { gap:7px; }.filters button { font-size:11px;padding:9px 12px;gap:10px; }.caption h3 { font-size:19px; }.index a { padding:8px 12px; }.card[data-kind=illustration] .media { aspect-ratio:4 / 5; }.viewer { width:96vw;max-height:94svh;border-radius:14px; }.viewerPanel { max-height:94svh; }.viewerHeader { padding:15px; }.viewerHeader>div>span { font-size:8px; }.viewerHeader h2 { font-size:18px; }.viewerBody { padding:12px; }.viewerFooter { padding:13px 15px; }.viewerImage,.viewerVideo { max-height:70svh; }.viewerBody[data-kind=web] .viewerImage { max-height:none; }.close { width:32px;height:32px; } }
 @media(hover:none) { .webViewport { overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7954f7 transparent; }.webImage { transform:none!important;transition:none; }.hoverHint { display:none; }.touchHint { display:inline; }.expand { opacity:1;translate:0; } }
 @media(prefers-reduced-motion:reduce) { .card { animation:none; }.webImage,.art,.expand,.filters button,.index a { transition:none; }.browser:hover .webImage,.browser:focus-within .webImage { transform:none; }.webViewport { overflow-y:auto;scrollbar-width:thin; }.hoverHint { display:none; }.touchHint { display:inline; } }
+
+/* Homepage artwork without decorative card or browser frames. */
+.showcase { grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 28px; }
+.showcase .media { aspect-ratio:4 / 3;border:0;border-radius:0;background:transparent; }
+.showcase .art { object-fit:contain; }
+.showcase .card[data-kind=web] .art { object-fit:cover;object-position:top; }
+.showcase .caption p { color:#bba1ff; }
+@media(max-width:650px) { .showcase { grid-template-columns:1fr;gap:32px; } }
