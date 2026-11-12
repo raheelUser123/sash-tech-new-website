@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { JsonLd } from "@/components/JsonLd";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactFormFromParams } from "@/components/contact/ContactFormFromParams";
-import { ContactMap } from "@/components/contact/ContactMap";
 import { Glow } from "@/components/motion/Glow";
 import { MotionEngine } from "@/components/motion/MotionEngine";
 import { Button } from "@/components/ui/Button";
@@ -14,6 +13,9 @@ const DESCRIPTION =
   "Contact Sash Tech Digital about creative design, animation, video, websites, SEO or digital marketing.";
 
 export const metadata = pageMetadata({ title: "Contact Us", description: DESCRIPTION, path: "/contact" });
+
+const address = `${site.address.street}, ${site.address.city}, ${site.address.postalCode}, ${site.address.countryName}`;
+const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
 const contactPageJsonLd = {
   "@context": "https://schema.org",
@@ -66,6 +68,10 @@ export default function ContactPage() {
                 <br />
                 {site.address.city}, {site.address.postalCode}
               </address>
+              <a className={styles.directions} href={directionsUrl} target="_blank" rel="noopener noreferrer">
+                Get directions <span aria-hidden="true">↗</span>
+                <span className="sr-only"> (opens Google Maps in a new tab)</span>
+              </a>
               <div className={styles.contactLinks}>
                 <a className={styles.mailLink} href={`mailto:${site.email}`}>
                   {site.email}
@@ -91,15 +97,6 @@ export default function ContactPage() {
               <ContactFormFromParams />
             </Suspense>
           </div>
-        </div>
-      </section>
-
-      <section className="section theme-paper" aria-labelledby="map-title">
-        <div className="container">
-          <h2 id="map-title" className={`h2 ${styles.mapTitle}`} data-split>
-            Based in <em>Texas, creating</em> worldwide.
-          </h2>
-          <ContactMap />
         </div>
       </section>
 
